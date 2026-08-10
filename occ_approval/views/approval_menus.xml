@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_occ_approval_root" name="审批"
+              sequence="45" groups="occ_approval.group_approval_user"/>
+
+    <menuitem id="menu_occ_approval_dashboard" name="审批中心"
+              parent="menu_occ_approval_root" action="action_approval_dashboard"
+              sequence="10" groups="occ_approval.group_approval_user"/>
+    <menuitem id="menu_occ_approval_tasks" name="我的待办"
+              parent="menu_occ_approval_root" action="action_my_approval_tasks"
+              sequence="20" groups="occ_approval.group_approval_user"/>
+    <menuitem id="menu_occ_approval_instances" name="审批申请"
+              parent="menu_occ_approval_root" action="action_approval_instances"
+              sequence="30" groups="occ_approval.group_approval_user"/>
+
+    <menuitem id="menu_occ_approval_configuration" name="配置"
+              parent="menu_occ_approval_root" sequence="90"
+              groups="occ_approval.group_approval_manager"/>
+    <menuitem id="menu_occ_approval_workflows" name="审批流程"
+              parent="menu_occ_approval_configuration" action="action_approval_workflows"
+              sequence="10" groups="occ_approval.group_approval_manager"/>
+    <menuitem id="menu_occ_approval_roles" name="审批角色"
+              parent="menu_occ_approval_configuration" action="action_approval_roles"
+              sequence="20" groups="occ_approval.group_approval_manager"/>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_approval_dashboard" model="ir.actions.client">
+        <field name="name">审批中心</field>
+        <field name="tag">occ_approval.dashboard</field>
+        <field name="target">main</field>
+    </record>
+
+    <record id="action_workflow_designer" model="ir.actions.client">
+        <field name="name">可视化流程设计器</field>
+        <field name="tag">occ_approval.designer</field>
+        <field name="target">main</field>
+    </record>
+</odoo>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- New WeChat users use zh_CN, so ensure it is an installed language. -->
+    <function model="res.lang" name="_occ_ensure_new_wechat_user_language"/>
+</odoo>

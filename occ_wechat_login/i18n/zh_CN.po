@@ -1,0 +1,682 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* occ_wechat_login
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: occ_wechat_login
+#: model:mail.template,body_html:occ_wechat_login.mail_template_initial_credentials
+msgid ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px; color: #212529;\">\n"
+"                    <p>Hello <t t-out=\"ctx.get('community_username') or object.name or ''\"/>,</p>\n"
+"                    <p>\n"
+"                        Your Odoo Chinese Community account has been activated. You can now sign in\n"
+"                        either by scanning the WeChat QR code or with the email and initial password below.\n"
+"                    </p>\n"
+"                    <table style=\"margin: 20px 0; border-collapse: collapse;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding: 6px 12px 6px 0;\"><strong>Login email</strong></td>\n"
+"                            <td style=\"padding: 6px 0;\"><code t-out=\"ctx.get('initial_login')\"/></td>\n"
+"                        </tr>\n"
+"                        <tr>\n"
+"                            <td style=\"padding: 6px 12px 6px 0;\"><strong>Community username</strong></td>\n"
+"                            <td style=\"padding: 6px 0;\"><code t-out=\"ctx.get('community_username')\"/></td>\n"
+"                        </tr>\n"
+"                        <tr>\n"
+"                            <td style=\"padding: 6px 12px 6px 0;\"><strong>Initial password</strong></td>\n"
+"                            <td style=\"padding: 6px 0;\"><code t-out=\"ctx.get('initial_password')\"/></td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    <p>Please sign in and change this initial password as soon as possible.</p>\n"
+"                    <p>For your security, do not forward or share this email.</p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px; color: #212529;\">\n"
+"                    <p>您好 <t t-out=\"ctx.get('community_username') or object.name or ''\"/>：</p>\n"
+"                    <p>\n"
+"                        您的 Odoo 中文社区账号已激活。现在可以使用微信扫码登录，\n"
+"                        也可以使用下方邮箱和初始密码登录。\n"
+"                    </p>\n"
+"                    <table style=\"margin: 20px 0; border-collapse: collapse;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding: 6px 12px 6px 0;\"><strong>登录邮箱</strong></td>\n"
+"                            <td style=\"padding: 6px 0;\"><code t-out=\"ctx.get('initial_login')\"/></td>\n"
+"                        </tr>\n"
+"                        <tr>\n"
+"                            <td style=\"padding: 6px 12px 6px 0;\"><strong>社区用户名</strong></td>\n"
+"                            <td style=\"padding: 6px 0;\"><code t-out=\"ctx.get('community_username')\"/></td>\n"
+"                        </tr>\n"
+"                        <tr>\n"
+"                            <td style=\"padding: 6px 12px 6px 0;\"><strong>初始密码</strong></td>\n"
+"                            <td style=\"padding: 6px 0;\"><code t-out=\"ctx.get('initial_password')\"/></td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    <p>请尽快登录并修改初始密码。</p>\n"
+"                    <p>为保障账号安全，请勿转发或分享本邮件。</p>\n"
+"                </div>\n"
+"            "
+
+#. module: occ_wechat_login
+#: model:mail.template,body_html:occ_wechat_login.mail_template_email_verification
+msgid ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px; color: #212529;\">\n"
+"                    <p>Hello <t t-out=\"object.name or ''\"/>,</p>\n"
+"                    <p>\n"
+"                        Please verify this email address to finish joining the Odoo Chinese Community.\n"
+"                        The verification link is valid for 24 hours and can only be used once.\n"
+"                    </p>\n"
+"                    <p style=\"margin: 24px 0; text-align: center;\">\n"
+"                        <a t-att-href=\"ctx.get('verification_url')\" style=\"display: inline-block; padding: 10px 20px; color: #ffffff; background-color: #07c160; border-radius: 5px; text-decoration: none;\">\n"
+"                            Verify email address\n"
+"                        </a>\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        If the button does not work, copy and open this address in your browser:<br/>\n"
+"                        <a t-att-href=\"ctx.get('verification_url')\" t-out=\"ctx.get('verification_url')\"/>\n"
+"                    </p>\n"
+"                    <p>If you did not request this message, you can safely ignore it.</p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px; color: #212529;\">\n"
+"                    <p>您好 <t t-out=\"object.name or ''\"/>：</p>\n"
+"                    <p>\n"
+"                        请验证此邮箱地址，以完成加入 Odoo 中文社区的流程。\n"
+"                        验证链接有效期为 24 小时，并且只能使用一次。\n"
+"                    </p>\n"
+"                    <p style=\"margin: 24px 0; text-align: center;\">\n"
+"                        <a t-att-href=\"ctx.get('verification_url')\" style=\"display: inline-block; padding: 10px 20px; color: #ffffff; background-color: #07c160; border-radius: 5px; text-decoration: none;\">\n"
+"                            验证邮箱地址\n"
+"                        </a>\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        如果按钮无法使用，请复制以下地址并在浏览器中打开：<br/>\n"
+"                        <a t-att-href=\"ctx.get('verification_url')\" t-out=\"ctx.get('verification_url')\"/>\n"
+"                    </p>\n"
+"                    <p>如果您未申请此操作，可以安全地忽略本邮件。</p>\n"
+"                </div>\n"
+"            "
+
+#. module: occ_wechat_login
+#: model:ir.model.constraint,message:occ_wechat_login.constraint_res_users_occ_wechat_unionid_unique
+msgid "A WeChat UnionID can only be linked to one user."
+msgstr "一个微信 UnionID 只能关联一个用户。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "A verification email has been sent. Please check your inbox."
+msgstr "验证邮件已发送，请检查您的收件箱。"
+
+#. module: occ_wechat_login
+#: model:ir.model.constraint,message:occ_wechat_login.constraint_res_users_occ_verified_email_unique
+msgid "A verified email address can only be linked to one OCC user."
+msgstr "一个已验证邮箱只能关联一个 OCC 用户。"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_res_config_settings_occ_wechat
+msgid "Allow users to sign in by scanning a QR code with WeChat."
+msgstr "允许用户使用微信扫描二维码登录。"
+
+#. module: occ_wechat_login
+#: model:ir.model.constraint,message:occ_wechat_login.constraint_res_users_occ_username_unique
+msgid "An OCC community username can only be linked to one user."
+msgstr "一个 OCC 社区用户名只能关联一个用户。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/models/res_config_settings.py:0
+msgid "AppID and AppSecret are required before enabling WeChat login."
+msgstr "启用微信登录前必须填写 AppID 和 AppSecret。"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_res_config_settings_occ_wechat
+msgid "Authorized callback URL"
+msgstr "授权回调地址"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.email_page
+msgid ""
+"Check your inbox and open the verification link. You may update the address "
+"below and send a new link if needed."
+msgstr "请检查收件箱并打开验证链接。如有需要，可在下方修改地址并发送新链接。"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.email_page
+msgid ""
+"Choose a unique community username and verify your email address to activate"
+" OCC access."
+msgstr "请选择唯一的社区用户名并验证邮箱地址，以激活 OCC 权限。"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.email_page
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_users_form_occ_wechat
+msgid "Community username"
+msgstr "社区用户名"
+
+#. module: occ_wechat_login
+#: model:ir.model,name:occ_wechat_login.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设定"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.verify_confirm
+msgid "Confirm community username"
+msgstr "确认社区用户名"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.verify_confirm
+msgid "Confirm email verification"
+msgstr "确认邮箱验证"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.verify_confirm
+msgid "Confirm verification"
+msgstr "确认验证"
+
+#. module: occ_wechat_login
+#: model:ir.model,name:occ_wechat_login.model_res_partner
+msgid "Contact"
+msgstr "联系人"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.verify_result
+msgid "Continue to Odoo"
+msgstr "进入 Odoo"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_partner__display_name
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_email_verification_required
+msgid "Email Verification Required"
+msgstr "需要验证邮箱"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_email_verified_at
+msgid "Email Verified At"
+msgstr "邮箱验证时间"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.email_page
+msgid "Email address"
+msgstr "邮箱地址"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.verify_result
+msgid "Email verified"
+msgstr "邮箱已验证"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_users_form_occ_wechat
+msgid "Email verified at"
+msgstr "邮箱验证时间"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_config_settings__occ_wechat_enabled
+msgid "Enable WeChat Login"
+msgstr "启用微信登录"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_config_settings__id
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_partner__id
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields.selection,name:occ_wechat_login.selection__res_config_settings__occ_wechat_new_user_type__internal
+msgid "Internal User"
+msgstr "内部用户"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_res_config_settings_occ_wechat
+msgid "New accounts keep the selected user type after email verification."
+msgstr "新账号完成邮箱验证后仍保持所选的用户类型。"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_config_settings__occ_wechat_new_user_type
+msgid "New WeChat User Type"
+msgstr "新建微信用户类型"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_res_config_settings_occ_wechat
+msgid "New user type"
+msgstr "新建用户类型"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_community_username
+msgid "OCC Community Username"
+msgstr "OCC 社区用户名"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_users_form_occ_wechat
+msgid "OCC WeChat Identity"
+msgstr "OCC 微信身份"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_res_config_settings_occ_wechat
+msgid "OCC WeChat Login"
+msgstr "OCC 微信登录"
+
+#. module: occ_wechat_login
+#: model:mail.template,name:occ_wechat_login.mail_template_email_verification
+msgid "OCC: Email Verification"
+msgstr "OCC：邮箱验证"
+
+#. module: occ_wechat_login
+#: model:mail.template,name:occ_wechat_login.mail_template_initial_credentials
+msgid "OCC: Initial Login Credentials"
+msgstr "OCC：初始登录凭据"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_community_username_normalized
+msgid "Occ Community Username Normalized"
+msgstr "OCC 社区用户名规范值"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_email_send_window_count
+msgid "Occ Email Send Window Count"
+msgstr "OCC 邮件发送窗口计数"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_email_send_window_start
+msgid "Occ Email Send Window Start"
+msgstr "OCC 邮件发送窗口起始时间"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_email_verification_nonce
+msgid "Occ Email Verification Nonce"
+msgstr "OCC 邮箱验证随机值"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.login_wechat_split
+msgid "Open WeChat login"
+msgstr "打开微信登录"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.login_wechat_split
+msgid "Password Login"
+msgstr "密码登录"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_pending_community_username
+msgid "Pending OCC Community Username"
+msgstr "待确认的 OCC 社区用户名"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_pending_email
+msgid "Pending Verified Email"
+msgstr "待验证邮箱"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_users_form_occ_wechat
+msgid "Pending community username"
+msgstr "待确认社区用户名"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_users_form_occ_wechat
+msgid "Pending verification email"
+msgstr "待验证邮箱"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/models/res_users.py:0
+msgid "Please enter a valid email address."
+msgstr "请输入有效的邮箱地址。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/models/res_users.py:0
+msgid "Please wait before requesting another verification email."
+msgstr "请稍候再申请新的验证邮件。"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields.selection,name:occ_wechat_login.selection__res_config_settings__occ_wechat_new_user_type__portal
+msgid "Portal User"
+msgstr "门户用户"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_res_config_settings_occ_wechat
+msgid ""
+"Register this exact HTTPS address in the WeChat Open Platform website "
+"application."
+msgstr "请在微信开放平台网站应用中登记这一完整的 HTTPS 地址。"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.verify_confirm
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.verify_result
+msgid "Request a new verification link"
+msgstr "申请新的验证链接"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.login_wechat_split
+msgid "Scan with WeChat to sign in"
+msgstr "使用微信扫码登录"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.email_page
+msgid "Send a new verification link"
+msgstr "发送新的验证链接"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.email_page
+msgid "Send verification email"
+msgstr "发送验证邮件"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.login_wechat
+msgid "Sign in with WeChat"
+msgstr "使用微信登录"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.verify_result
+msgid "Sign in with email or WeChat"
+msgstr "使用邮箱或微信登录"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.login_wechat_split
+msgid "Sign in with your verified email and password"
+msgstr "使用已验证邮箱和密码登录"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.login_wechat_split
+msgid "The QR code is provided by WeChat and expires automatically."
+msgstr "二维码由微信官方提供，并会自动过期。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "The WeChat login request has expired. Please try again."
+msgstr "微信登录请求已过期，请重试。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/models/res_users.py:0
+msgid ""
+"The community username may only contain letters, numbers, underscores, and "
+"hyphens, and must start and end with a letter or number."
+msgstr "社区用户名只能包含字母、数字、下划线和连字符，并且首尾必须是字母或数字。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/models/res_users.py:0
+msgid ""
+"The community username must contain between %(min)s and %(max)s characters."
+msgstr "社区用户名长度必须为 %(min)s 到 %(max)s 个字符。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "The initial password email template is missing."
+msgstr "缺少初始密码邮件模板。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "The verification email template is missing."
+msgstr "缺少验证邮件模板。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid ""
+"This WeChat account has no available UnionID. Please contact the "
+"administrator."
+msgstr "该微信账号无法提供 UnionID，请联系管理员。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/models/res_users.py:0
+msgid "This WeChat-linked account has been disabled."
+msgstr "该微信关联账号已被停用。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/models/res_users.py:0
+msgid "This account cannot verify an email address."
+msgstr "该账号无法验证邮箱地址。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "This account has been disabled. Please contact the administrator."
+msgstr "该账号已被停用，请联系管理员。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/models/res_users.py:0
+msgid "This community username is already in use. Please choose another one."
+msgstr "该社区用户名已被使用，请选择其他用户名。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/models/res_users.py:0
+msgid "This email address has already been verified."
+msgstr "该邮箱地址已经验证。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/models/res_users.py:0
+msgid "This email address is already linked to another Odoo user."
+msgstr "该邮箱地址已关联到其他 Odoo 用户。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+#: code:addons/occ_wechat_login/models/res_users.py:0
+msgid "This verification link is invalid or has expired."
+msgstr "该验证链接无效或已过期。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/models/res_users.py:0
+msgid ""
+"Too many verification emails have been requested. Please try again later."
+msgstr "验证邮件申请次数过多，请稍后再试。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "Unable to send the verification email."
+msgstr "无法发送验证邮件。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "Unable to send the verification email. Please try again later."
+msgstr "无法发送验证邮件，请稍后再试。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "Unable to verify this email address. Please try again later."
+msgstr "无法验证该邮箱地址，请稍后再试。"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.email_page
+msgid ""
+"Use 2–32 letters or numbers. Underscores and hyphens are allowed in the "
+"middle. The username must be unique."
+msgstr "请输入 2–32 个字母或数字；中间可以使用下划线和连字符，且用户名必须唯一。"
+
+#. module: occ_wechat_login
+#: model:ir.model,name:occ_wechat_login.model_res_users
+msgid "User"
+msgstr "用户"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_email_verification_sent_at
+msgid "Verification Email Sent At"
+msgstr "验证邮件发送时间"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_users_form_occ_wechat
+msgid "Verification email sent at"
+msgstr "验证邮件发送时间"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.verify_result
+msgid "Verification failed"
+msgstr "验证失败"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_verified_email
+msgid "Verified Email"
+msgstr "已验证邮箱"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_users_form_occ_wechat
+msgid "Verified email"
+msgstr "已验证邮箱"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.email_page
+msgid "Verify your email address"
+msgstr "验证您的邮箱地址"
+
+#. module: occ_wechat_login
+#: model:mail.template,subject:occ_wechat_login.mail_template_email_verification
+msgid "Verify your email address for the Odoo Chinese Community"
+msgstr "验证您的 Odoo 中文社区邮箱地址"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_config_settings__occ_wechat_app_id
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_res_config_settings_occ_wechat
+msgid "WeChat AppID"
+msgstr "微信 AppID"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_config_settings__occ_wechat_app_secret
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_res_config_settings_occ_wechat
+msgid "WeChat AppSecret"
+msgstr "微信 AppSecret"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_config_settings__occ_wechat_callback_url
+msgid "WeChat Callback URL"
+msgstr "微信回调地址"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_wechat_openid
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_users_form_occ_wechat
+msgid "WeChat OpenID"
+msgstr "微信 OpenID"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.login_wechat_split
+msgid "WeChat QR Login"
+msgstr "微信扫码登录"
+
+#. module: occ_wechat_login
+#: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_wechat_unionid
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_users_form_occ_wechat
+msgid "WeChat UnionID"
+msgstr "微信 UnionID"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/models/res_users.py:0
+msgid "WeChat User"
+msgstr "微信用户"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "WeChat authorization failed. Please scan the code again."
+msgstr "微信授权失败，请重新扫码。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "WeChat could not provide the account identity required for login."
+msgstr "微信未能提供登录所需的账号身份信息。"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.login_wechat_split
+msgid "WeChat login QR code"
+msgstr "微信登录二维码"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "WeChat login failed. Please try again."
+msgstr "微信登录失败，请重试。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid ""
+"WeChat login is not configured correctly. Please contact the administrator."
+msgstr "微信登录配置不正确，请联系管理员。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "WeChat login is not configured."
+msgstr "尚未配置微信登录。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "WeChat login is temporarily unavailable. Please try again later."
+msgstr "微信登录暂时不可用，请稍后再试。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid "WeChat returned inconsistent account identity information."
+msgstr "微信返回的账号身份信息不一致。"
+
+#. module: occ_wechat_login
+#: model:mail.template,subject:occ_wechat_login.mail_template_initial_credentials
+msgid "Your Odoo Chinese Community account is ready"
+msgstr "您的 Odoo 中文社区账号已就绪"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid ""
+"Your email address has been verified and is now your login. Your existing "
+"password has not changed."
+msgstr "您的邮箱地址已验证并成为登录名，现有密码未发生变化。"
+
+#. module: occ_wechat_login
+#. odoo-python
+#: code:addons/occ_wechat_login/controllers/main.py:0
+msgid ""
+"Your email address has been verified. Your email is now your login, and the "
+"initial password has been sent to it."
+msgstr "您的邮箱地址已验证并成为登录名，初始密码已发送到该邮箱。"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.verify_confirm
+msgid "and verify"
+msgstr "并验证"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.verify_confirm
+msgid "for your OCC account."
+msgstr "作为您的 OCC 账号邮箱。"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.email_page
+msgid "name@example.com"
+msgstr "name@example.com"
+
+#. module: occ_wechat_login
+#: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_res_config_settings_occ_wechat
+msgid "wx0123456789abcdef"
+msgstr "wx0123456789abcdef"

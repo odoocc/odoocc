@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_occ_wechat" model="ir.ui.view">
+        <field name="name">res.users.form.occ.wechat</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='page_security']" position="inside">
+                <group name="occ_wechat_identity" string="OCC WeChat Identity" groups="base.group_system">
+                    <group>
+                        <field name="occ_wechat_unionid" string="WeChat UnionID" readonly="1"/>
+                        <field name="occ_wechat_openid" string="WeChat OpenID" readonly="1"/>
+                        <field name="occ_community_username" string="Community username"/>
+                        <field name="occ_pending_community_username" string="Pending community username" readonly="1"/>
+                        <field name="occ_pending_email" string="Pending verification email" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="occ_verified_email" string="Verified email" readonly="1"/>
+                        <field name="occ_email_verification_sent_at" string="Verification email sent at" readonly="1"/>
+                        <field name="occ_email_verified_at" string="Email verified at" readonly="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

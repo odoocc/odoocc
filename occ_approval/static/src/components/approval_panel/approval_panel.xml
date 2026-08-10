@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="occ_approval.ApprovalPanel">
+        <div class="o_occ_drawer_backdrop" t-on-click="onBackdropClick">
+            <aside
+                class="o_occ_approval_panel"
+                t-ref="panel"
+                tabindex="-1"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="o_occ_panel_title">
+                <header class="o_occ_panel_header">
+                    <div class="min-w-0">
+                        <div class="d-flex align-items-center gap-2">
+                            <h2 id="o_occ_panel_title" class="m-0">Approval</h2>
+                            <span t-if="state.data.instance" t-attf-class="badge text-bg-{{ statusClass(state.data.state) }}" t-esc="stateLabel(state.data.state)"/>
+                        </div>
+                        <small class="text-muted text-truncate d-block" t-esc="state.data.instance?.source_display_name || (props.resModel + ' · ' + props.resId)"/>
+                    </div>
+                    <button type="button" class="btn-close" t-on-click="props.close" t-att-disabled="isBusy" aria-label="Close approval panel"/>
+                </header>
+
+                <div t-if="state.loading" class="o_occ_panel_loading" role="status">
+                    <i class="fa fa-spinner fa-spin" aria-hidden="true"/>
+                    <span>Loading approval…</span>
+                </div>
+
+                <t t-else="">
+                    <div t-if="state.data.instance" class="o_occ_panel_toolbar" role="toolbar" aria-label="Approval actions">
+                        <select
+                            t-if="state.data.actions.can_create and requestWorkflows.length"
+                            class="form-select form-select-sm o_occ_toolbar_workflow"
+                            t-on-change="selectWorkflow"
+                            aria-label="Workflow for new approval">
+                            <option t-foreach="requestWorkflows" t-as="workflow" t-key="workflow.id" t-att-value="workflow.id" t-att-selected="sameId(state.selectedWorkflowId, workflow.id)" t-esc="workflow.name"/>
+                        </select>
+                        <button t-if="state.data.actions.can_create and requestWorkflows.length" type="button" class="btn btn-primary" t-on-click="createInstance" t-att-disabled="isBusy or !selectedWorkflow">
+                            <i t-if="state.actionKey === 'create'" class="fa fa-spinner fa-spin me-1" aria-hidden="true"/>
+                            New approval
+                        </button>
+                        <button t-if="state.data.actions.can_submit" type="button" class="btn btn-primary" t-on-click="submitInstance" t-att-disabled="isBusy">
+                            <i t-if="state.actionKey === 'submit'" class="fa fa-spinner fa-spin me-1" aria-hidden="true"/>
+                            Submit
+                        </button>
+                        <button t-if="state.data.actions.can_cancel_submission" type="button" class="btn btn-outline-secondary" t-on-click="requestCancelSubmission" t-att-disabled="isBusy">
+                            Return to draft
+                        </button>
+                        <button t-if="canRemind" type="button" class="btn btn-outline-warning" t-on-click="() => this.openOperation('remind')" t-att-disabled="isBusy">
+                            <i class="fa fa-bell me-1" aria-hidden="true"/>
+                            Remind
+                        </button>
+                        <button t-if="state.data.actions.can_retry_execution" type="button" class="btn btn-outline-danger" t-on-click="retryExecution" t-att-disabled="isBusy">
+                            Retry execution
+                        </button>
+                        <button t-if="state.data.actions.can_cancel_instance" type="button" class="btn btn-outline-danger" t-on-click="requestCancelInstance" t-att-disabled="isBusy">
+                            Cancel
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary ms-auto" t-on-click="openDocument" t-att-disabled="isBusy" title="Open source document">
+                            <i class="fa fa-external-link me-1" aria-hidden="true"/>
+                            Document
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" t-on-click="refresh" t-att-disabled="isBusy" aria-label="Refresh approval">
+                            <i class="fa fa-refresh" aria-hidden="true"/>
+                        </button>
+                    </div>
+
+                    <div class="o_occ_panel_body">
+                        <div t-if="state.data.sourceCompanyMismatch" class="alert alert-warning mx-3 mt-3 mb-0" role="alert">
+                            This document changed company after approval started. Workflow actions are locked; cancel this approval before starting a new one.
+                        </div>
+                        <section t-if="!state.data.instance" class="o_occ_panel_section o_occ_request_section" aria-labelledby="o_occ_request_title">
+                            <div class="o_occ_request_icon"><i class="fa fa-sitemap" aria-hidden="true"/></div>
+                            <h3 id="o_occ_request_title">Start an approval</h3>
+                            <p t-if="requestWorkflows.length">Choose the workflow that should govern this record.</p>
+                            <p t-elif="state.data.enabled">Matching workflows are started by their configured business actions.</p>
+                            <p t-else="">No published approval workflow matches this record.</p>
+                            <t t-if="requestWorkflows.length and state.data.permissions.can_request">
+                                <label class="form-label text-start w-100" for="o_occ_workflow_select">Workflow</label>
+                                <select id="o_occ_workflow_select" class="form-select" t-on-change="selectWorkflow">
+                                    <option t-foreach="requestWorkflows" t-as="workflow" t-key="workflow.id" t-att-value="workflow.id" t-att-selected="sameId(state.selectedWorkflowId, workflow.id)" t-esc="workflow.name"/>
+                                </select>
+                                <button type="button" class="btn btn-primary mt-3" t-on-click="createInstance" t-att-disabled="isBusy">
+                                    <i t-if="state.actionKey === 'create'" class="fa fa-spinner fa-spin me-1" aria-hidden="true"/>
+                                    Create approval
+                                </button>
+                            </t>
+                            <div t-elif="requestWorkflows.length" class="alert alert-warning mb-0">
+                                You need write access to this document to request approval.
+                            </div>
+                        </section>
+
+                        <t t-if="state.data.instance">
+                            <section t-if="state.data.instance.execution_state === 'failed'" class="o_occ_execution_error" role="alert">
+                                <div><i class="fa fa-exclamation-triangle" aria-hidden="true"/> Business execution failed</div>
+                                <p t-esc="state.data.instance.execution_error"/>
+                            </section>
+
+                            <section t-if="requesterChoiceNodes.length" class="o_occ_panel_section" aria-labelledby="o_occ_assignment_title">
+                                <div class="o_occ_section_title">
+                                    <h3 id="o_occ_assignment_title">Assignees to choose</h3>
+                                    <span class="badge text-bg-light" t-esc="requesterChoiceNodes.length"/>
+                                </div>
+                                <article t-foreach="requesterChoiceNodes" t-as="choice" t-key="choice.id" class="o_occ_choice_card">
+                                    <div>
+                                        <strong t-esc="choice.node_name || choice.name"/>
+                                        <small class="text-muted d-block">
+                                            <t t-esc="choice.assignees ? choice.assignees.length : (choice.draft_assignee_user_ids || []).length"/> selected
+                                        </small>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" t-on-click="() => this.openUserPicker(choice)" t-att-disabled="isBusy">
+                                        Choose users
+                                    </button>
+                                </article>
+                            </section>
+
+                            <section class="o_occ_panel_section" aria-labelledby="o_occ_tasks_title">
+                                <div class="o_occ_section_title">
+                                    <h3 id="o_occ_tasks_title">My tasks</h3>
+                                    <span class="badge text-bg-light" t-esc="actionTasks.length"/>
+                                </div>
+                                <div t-if="!actionTasks.length" class="o_occ_empty_state">
+                                    <i class="fa fa-check-circle" aria-hidden="true"/>
+                                    <p>No approval task currently requires your action.</p>
+                                </div>
+                                <article t-foreach="actionTasks" t-as="task" t-key="task.id" class="o_occ_task_card">
+                                    <header>
+                                        <div class="min-w-0">
+                                            <h4 class="text-truncate" t-esc="task.node_name"/>
+                                            <small class="text-muted" t-esc="task.kind === 'task' ? 'Execution task' : 'Approval task'"/>
+                                        </div>
+                                        <span t-attf-class="badge text-bg-{{ statusClass(task.state) }}" t-esc="stateLabel(task.state)"/>
+                                    </header>
+                                    <div class="o_occ_task_meta">
+                                        <span><i class="fa fa-user me-1" aria-hidden="true"/><t t-esc="task.user_name"/></span>
+                                        <span t-if="task.deadline_at"><i class="fa fa-clock-o me-1" aria-hidden="true"/><t t-esc="task.deadline_at"/></span>
+                                    </div>
+                                    <p t-if="task.comment" class="o_occ_task_comment" t-esc="task.comment"/>
+                                    <div class="o_occ_task_actions">
+                                        <button t-if="canTask(task, 'approve')" type="button" class="btn btn-sm btn-success" t-on-click="() => this.openOperation('approve', task)" t-att-disabled="isBusy">
+                                            <i class="fa fa-check me-1" aria-hidden="true"/>
+                                            <t t-esc="task.kind === 'task' ? 'Complete' : 'Approve'"/>
+                                        </button>
+                                        <button t-if="canTask(task, 'reject') and task.reject_targets.length" type="button" class="btn btn-sm btn-outline-danger" t-on-click="() => this.openOperation('reject', task)" t-att-disabled="isBusy">
+                                            <i class="fa fa-reply me-1" aria-hidden="true"/>
+                                            Reject
+                                        </button>
+                                        <button t-if="canTask(task, 'revoke')" type="button" class="btn btn-sm btn-outline-secondary" t-on-click="() => this.openOperation('revoke', task)" t-att-disabled="isBusy">
+                                            <i class="fa fa-undo me-1" aria-hidden="true"/>
+                                            Revoke
+                                        </button>
+                                    </div>
+                                </article>
+                            </section>
+
+                            <section class="o_occ_panel_section" aria-labelledby="o_occ_timeline_title">
+                                <div class="o_occ_section_title">
+                                    <h3 id="o_occ_timeline_title">Workflow</h3>
+                                    <span class="badge text-bg-light" t-esc="state.data.nodes.length"/>
+                                </div>
+                                <ol class="o_occ_timeline">
+                                    <li t-foreach="state.data.nodes" t-as="node" t-key="node.id" t-attf-class="is-{{ node.state }}">
+                                        <span t-attf-class="o_occ_timeline_marker text-bg-{{ statusClass(node.state) }}" aria-hidden="true">
+                                            <i t-attf-class="fa {{ nodeIcon(node.type) }}"/>
+                                        </span>
+                                        <div class="o_occ_timeline_content">
+                                            <div class="d-flex justify-content-between gap-2">
+                                                <strong t-esc="node.name"/>
+                                                <small class="text-muted" t-esc="stateLabel(node.state)"/>
+                                            </div>
+                                            <div t-if="node.deadline_at" class="small text-muted mt-1">
+                                                Deadline <t t-esc="node.deadline_at"/>
+                                            </div>
+                                            <div t-if="node.tasks.length" class="o_occ_assignees">
+                                                <span t-foreach="node.tasks" t-as="task" t-key="task.id" t-attf-class="o_occ_person_chip is-{{ task.state }}">
+                                                    <i class="fa fa-user" aria-hidden="true"/>
+                                                    <t t-esc="task.user_name"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </section>
+
+                            <section class="o_occ_panel_section" aria-labelledby="o_occ_logs_title">
+                                <div class="o_occ_section_title">
+                                    <h3 id="o_occ_logs_title">Audit trail</h3>
+                                    <span class="badge text-bg-light" t-esc="state.data.events.length"/>
+                                </div>
+                                <div t-if="!state.data.events.length" class="o_occ_empty_state compact">No activity has been recorded yet.</div>
+                                <article t-foreach="state.data.events.slice().reverse()" t-as="event" t-key="event.id" class="o_occ_log_entry">
+                                    <header>
+                                        <strong t-esc="eventTitle(event)"/>
+                                        <time class="text-muted" t-esc="event.occurred_at"/>
+                                    </header>
+                                    <div class="small text-muted" t-esc="event.actor_name || 'System'"/>
+                                    <p t-if="eventDetail(event)" t-esc="eventDetail(event)"/>
+                                </article>
+                            </section>
+                        </t>
+                    </div>
+                </t>
+            </aside>
+
+            <div t-if="state.operation" class="o_occ_panel_modal_backdrop" role="presentation">
+                <section class="o_occ_panel_modal" role="dialog" aria-modal="true" aria-labelledby="o_occ_operation_title">
+                    <header>
+                        <h3 id="o_occ_operation_title" t-esc="state.operation.title"/>
+                        <button type="button" class="btn-close" t-on-click="closeOperation" t-att-disabled="isBusy" aria-label="Close"/>
+                    </header>
+                    <div class="o_occ_panel_modal_body">
+                        <t t-if="state.operation.type === 'reject'">
+                            <label class="form-label" for="o_occ_reject_node">Reject to</label>
+                            <select id="o_occ_reject_node" class="form-select" t-on-change="(ev) => this.updateOperation('target_node_id', ev)">
+                                <option value="">Select a previous node</option>
+                                <option t-foreach="state.operation.task.reject_targets" t-as="node" t-key="node.id" t-att-value="node.id" t-att-selected="sameId(state.operation.target_node_id, node.id)" t-esc="node.name"/>
+                            </select>
+                            <fieldset class="mt-3">
+                                <legend class="form-label">Resume behavior</legend>
+                                <div class="form-check">
+                                    <input id="o_occ_reject_sequential" class="form-check-input" type="radio" name="o_occ_reject_mode" value="sequential" t-att-checked="state.operation.mode === 'sequential'" t-on-change="(ev) => this.updateOperation('mode', ev)"/>
+                                    <label for="o_occ_reject_sequential" class="form-check-label">Follow the workflow again</label>
+                                </div>
+                                <div class="form-check">
+                                    <input id="o_occ_reject_direct" class="form-check-input" type="radio" name="o_occ_reject_mode" value="direct" t-att-checked="state.operation.mode === 'direct'" t-on-change="(ev) => this.updateOperation('mode', ev)"/>
+                                    <label for="o_occ_reject_direct" class="form-check-label">Return directly after rework</label>
+                                </div>
+                            </fieldset>
+                        </t>
+                        <label t-att-class="{'form-label': true, 'mt-3': state.operation.type === 'reject'}" for="o_occ_operation_comment">
+                            <t t-if="state.operation.type === 'remind'">Reminder message</t>
+                            <t t-else="">Comment</t>
+                        </label>
+                        <textarea id="o_occ_operation_comment" class="form-control" rows="4" placeholder="Add a clear and useful note" t-on-input="(ev) => this.updateOperation('comment', ev)"><t t-esc="state.operation.comment"/></textarea>
+                    </div>
+                    <footer>
+                        <button type="button" class="btn btn-secondary" t-on-click="closeOperation" t-att-disabled="isBusy">Cancel</button>
+                        <button type="button" class="btn btn-primary" t-on-click="confirmOperation" t-att-disabled="isBusy">
+                            <i t-if="isBusy" class="fa fa-spinner fa-spin me-1" aria-hidden="true"/>
+                            Confirm
+                        </button>
+                    </footer>
+                </section>
+            </div>
+
+            <div t-if="state.userPicker" class="o_occ_panel_modal_backdrop" role="presentation">
+                <section class="o_occ_panel_modal" role="dialog" aria-modal="true" aria-labelledby="o_occ_user_picker_title">
+                    <header>
+                        <div>
+                            <h3 id="o_occ_user_picker_title">Choose assignees</h3>
+                            <small class="text-muted" t-esc="state.userPicker.node.name"/>
+                        </div>
+                        <button type="button" class="btn-close" t-on-click="closeUserPicker" t-att-disabled="isBusy" aria-label="Close"/>
+                    </header>
+                    <div class="o_occ_panel_modal_body">
+                        <form class="input-group" t-on-submit="searchUsers">
+                            <input class="form-control" type="search" t-att-value="state.userPicker.query" t-on-input="updateUserQuery" placeholder="Search active users" aria-label="Search users"/>
+                            <button class="btn btn-outline-primary" type="submit" t-att-disabled="state.userPicker.loading">
+                                <i t-if="state.userPicker.loading" class="fa fa-spinner fa-spin" aria-hidden="true"/>
+                                <span t-else="">Search</span>
+                            </button>
+                        </form>
+                        <div class="o_occ_user_results mt-3">
+                            <label t-foreach="state.userPicker.results" t-as="user" t-key="user.id" class="o_occ_user_result">
+                                <input class="form-check-input" type="checkbox" t-att-checked="isPickerUserSelected(user.id)" t-on-change="() => this.toggleUser(user.id)"/>
+                                <span class="o_occ_user_avatar" aria-hidden="true" t-esc="(user.name || '?').slice(0, 1).toUpperCase()"/>
+                                <strong t-esc="user.name"/>
+                            </label>
+                            <div t-if="!state.userPicker.loading and !state.userPicker.results.length" class="o_occ_empty_state compact">No eligible users found.</div>
+                        </div>
+                    </div>
+                    <footer>
+                        <span class="me-auto text-muted small"><t t-esc="state.userPicker.selectedIds.length"/> selected</span>
+                        <button type="button" class="btn btn-secondary" t-on-click="closeUserPicker" t-att-disabled="isBusy">Cancel</button>
+                        <button type="button" class="btn btn-primary" t-on-click="applyUsers" t-att-disabled="isBusy">
+                            <i t-if="state.actionKey === 'set_users'" class="fa fa-spinner fa-spin me-1" aria-hidden="true"/>
+                            Apply
+                        </button>
+                    </footer>
+                </section>
+            </div>
+        </div>
+    </t>
+</templates>

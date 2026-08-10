@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="email_page" name="OCC Email Verification">
+        <t t-call="web.login_layout">
+            <div class="oe_login_form">
+                <h4 class="text-center mb-3">Verify your email address</h4>
+                <p class="text-muted text-center">
+                    Choose a unique community username and verify your email address to activate OCC access.
+                </p>
+
+                <div class="alert alert-danger" t-if="error" role="alert">
+                    <t t-out="error"/>
+                </div>
+                <div class="alert alert-success" t-if="message" role="status">
+                    <t t-out="message"/>
+                </div>
+                <div class="alert alert-info" t-if="mail_sent" role="status">
+                    Check your inbox and open the verification link. You may update the address below and send a new link if needed.
+                </div>
+
+                <form action="/occ/wechat/email" method="post" accept-charset="UTF-8">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="next" t-att-value="next_url or '/odoo'"/>
+                    <div class="mb-3">
+                        <label for="occ_community_username" class="form-label">Community username</label>
+                        <input id="occ_community_username"
+                               class="form-control"
+                               type="text"
+                               name="community_username"
+                               t-att-value="community_username or ''"
+                               t-att-minlength="community_username_min_length"
+                               t-att-maxlength="community_username_max_length"
+                               required="required"
+                               autocomplete="nickname"
+                               autocapitalize="off"/>
+                        <div class="form-text">
+                            Use 2–32 letters or numbers. Underscores and hyphens are allowed in the middle. The username must be unique.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="occ_pending_email" class="form-label">Email address</label>
+                        <input id="occ_pending_email"
+                               class="form-control"
+                               type="email"
+                               name="email"
+                               t-att-value="pending_email or ''"
+                               placeholder="name@example.com"
+                               required="required"
+                               autocomplete="email"
+                               autocapitalize="off"/>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <t t-if="mail_sent">Send a new verification link</t>
+                            <t t-else="">Send verification email</t>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <template id="verify_confirm" name="OCC Confirm Email Verification">
+        <t t-call="web.login_layout">
+            <div class="oe_login_form">
+                <h4 class="text-center mb-3">Confirm email verification</h4>
+                <div class="alert alert-danger" t-if="error" role="alert">
+                    <t t-out="error"/>
+                </div>
+                <t t-if="not error">
+                    <p class="text-center">
+                        Confirm community username <strong t-out="community_username"/> and verify
+                        <strong t-out="masked_email"/> for your OCC account.
+                    </p>
+                    <form action="/occ/wechat/email/verify" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="token" t-att-value="token"/>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Confirm verification</button>
+                        </div>
+                    </form>
+                </t>
+                <div class="text-center mt-3" t-if="error">
+                    <a href="/occ/wechat/email">Request a new verification link</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="verify_result" name="OCC Email Verification Result">
+        <t t-call="web.login_layout">
+            <div class="oe_login_form text-center">
+                <h4 class="mb-3">
+                    <t t-if="success">Email verified</t>
+                    <t t-else="">Verification failed</t>
+                </h4>
+                <div t-attf-class="alert #{'alert-success' if success else 'alert-danger'}" role="status">
+                    <t t-out="message"/>
+                </div>
+                <div class="d-grid mt-3" t-if="success and logged_in">
+                    <a class="btn btn-primary" href="/odoo">Continue to Odoo</a>
+                </div>
+                <div class="d-grid mt-3" t-elif="success">
+                    <a class="btn btn-primary" href="/web/login">Sign in with email or WeChat</a>
+                </div>
+                <div class="mt-3" t-else="">
+                    <a href="/occ/wechat/email">Request a new verification link</a>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

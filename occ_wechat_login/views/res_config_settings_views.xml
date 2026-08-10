@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_config_settings_occ_wechat" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.occ.wechat</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='integration']" position="inside">
+                <setting id="occ_wechat_login_setting"
+                         string="OCC WeChat Login"
+                         help="Allow users to sign in by scanning a QR code with WeChat.">
+                    <field name="occ_wechat_enabled"/>
+                    <div class="content-group" invisible="not occ_wechat_enabled">
+                        <div class="row mt16">
+                            <label for="occ_wechat_new_user_type" string="New user type" class="col-lg-3 o_light_label"/>
+                            <field name="occ_wechat_new_user_type" required="1"/>
+                        </div>
+                        <div class="text-muted mt8">
+                            New accounts keep the selected user type after email verification.
+                        </div>
+                        <div class="row mt16">
+                            <label for="occ_wechat_app_id" string="WeChat AppID" class="col-lg-3 o_light_label"/>
+                            <field name="occ_wechat_app_id" required="occ_wechat_enabled" placeholder="wx0123456789abcdef"/>
+                        </div>
+                        <div class="row mt16">
+                            <label for="occ_wechat_app_secret" string="WeChat AppSecret" class="col-lg-3 o_light_label"/>
+                            <field name="occ_wechat_app_secret" required="occ_wechat_enabled" password="True"/>
+                        </div>
+                        <div class="row mt16">
+                            <label for="occ_wechat_callback_url" string="Authorized callback URL" class="col-lg-3 o_light_label"/>
+                            <field name="occ_wechat_callback_url" readonly="1" widget="CopyClipboardChar"/>
+                        </div>
+                        <div class="text-muted mt8">
+                            Register this exact HTTPS address in the WeChat Open Platform website application.
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

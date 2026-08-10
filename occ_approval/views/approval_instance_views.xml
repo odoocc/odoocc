@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_approval_instance_list" model="ir.ui.view">
+        <field name="name">occ.approval.instance.list</field>
+        <field name="model">occ.approval.instance</field>
+        <field name="arch" type="xml">
+            <list string="审批申请" create="0" edit="0" delete="0"
+                  decoration-success="state == 'approved'"
+                  decoration-muted="state == 'cancelled'"
+                  decoration-warning="state == 'rework'">
+                <field name="name"/>
+                <field name="source_display_name" string="业务单据"/>
+                <field name="workflow_id"/>
+                <field name="requester_id" widget="many2one_avatar_user"/>
+                <field name="current_node_id" optional="show"/>
+                <field name="submitted_at" optional="show"/>
+                <field name="completed_at" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="execution_state" widget="badge" optional="hide"
+                       decoration-success="execution_state == 'done'"
+                       decoration-danger="execution_state == 'failed'"
+                       decoration-info="execution_state in ['pending', 'running']"/>
+                <field name="state" widget="badge"
+                       decoration-info="state in ['draft', 'running']"
+                       decoration-warning="state == 'rework'"
+                       decoration-success="state == 'approved'"
+                       decoration-muted="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_approval_instance_form" model="ir.ui.view">
+        <field name="name">occ.approval.instance.form</field>
+        <field name="model">occ.approval.instance</field>
+        <field name="arch" type="xml">
+            <form string="审批申请" create="0" edit="0" delete="0">
+                <header>
+                    <button name="action_open_document" type="object" string="打开业务单据"
+                            class="oe_highlight"/>
+                    <button name="action_cancel_instance" type="object" string="取消审批"
+                            class="btn-outline-danger"
+                            invisible="state not in ['draft', 'running', 'rework']"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,running,rework,approved,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                        <h2><field name="source_display_name"/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="workflow_id"/>
+                            <field name="workflow_version_id"/>
+                            <field name="requester_id" widget="many2one_avatar_user"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="current_node_id"/>
+                            <field name="return_node_id" invisible="not return_node_id"/>
+                            <field name="submitted_at"/>
+                            <field name="completed_at" invisible="not completed_at"/>
+                            <field name="cancelled_at" invisible="not cancelled_at"/>
+                        </group>
+                    </group>
+                    <group string="自动执行" invisible="execution_state == 'none'">
+                        <field name="execution_state" widget="badge"/>
+                        <field name="execution_attempts"/>
+                        <field name="executed_at" invisible="not executed_at"/>
+                        <field name="execution_error_public"
+                               invisible="not execution_error_public"/>
+                        <field name="execution_error"
+                               string="内部错误详情"
+                               groups="occ_approval.group_approval_manager"
+                               invisible="not execution_error"/>
+                    </group>
+                    <group string="取消说明" invisible="not cancellation_reason">
+                        <field name="cancellation_reason" nolabel="1"/>
+                    </group>
+                    <notebook>
+                        <page string="流程轨迹" name="nodes">
+                            <field name="node_ids" nolabel="1">
+                                <list create="0" edit="0" delete="0"
+                                      decoration-success="state in ['approved', 'completed']"
+                                      decoration-info="state == 'active'"
+                                      decoration-muted="state in ['skipped', 'cancelled']"
+                                      decoration-danger="state == 'rejected'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="node_type"/>
+                                    <field name="assignment_type" optional="hide"/>
+                                    <field name="approval_mode" optional="hide"/>
+                                    <field name="attempt" optional="hide"/>
+                                    <field name="entered_at"/>
+                                    <field name="deadline_at" optional="show"/>
+                                    <field name="completed_at" optional="show"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="审批任务" name="tasks">
+                            <field name="task_ids" nolabel="1">
+                                <list create="0" edit="0" delete="0"
+                                      decoration-info="state == 'pending'"
+                                      decoration-success="state in ['approved', 'completed']"
+                                      decoration-danger="state == 'rejected'"
+                                      decoration-muted="state == 'cancelled'">
+                                    <field name="node_id"/>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                    <field name="task_kind"/>
+                                    <field name="assigned_at"/>
+                                    <field name="deadline_at" optional="show"/>
+                                    <field name="acted_at" optional="show"/>
+                                    <field name="acted_by_id" widget="many2one_avatar_user" optional="hide"/>
+                                    <field name="comment" optional="hide"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="审计日志" name="events">
+                            <field name="event_ids" nolabel="1">
+                                <list create="0" edit="0" delete="0" default_order="sequence desc">
+                                    <field name="sequence"/>
+                                    <field name="occurred_at"/>
+                                    <field name="event_type"/>
+                                    <field name="node_id" optional="show"/>
+                                    <field name="actor_id" widget="many2one_avatar_user"/>
+                                    <field name="from_state" optional="hide"/>
+                                    <field name="to_state" optional="hide"/>
+                                    <field name="payload" widget="json" optional="hide"
+                                           groups="occ_approval.group_approval_technical"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_approval_instance_search" model="ir.ui.view">
+        <field name="name">occ.approval.instance.search</field>
+        <field name="model">occ.approval.instance</field>
+        <field name="arch" type="xml">
+            <search string="审批申请">
+                <field name="name"/>
+                <field name="source_display_name"/>
+                <field name="workflow_id"/>
+                <field name="requester_id"/>
+                <filter name="my_requests" string="我发起的" domain="[('requester_id', '=', uid)]"/>
+                <filter name="running" string="审批中" domain="[('state', 'in', ['running', 'rework'])]"/>
+                <filter name="approved" string="已通过" domain="[('state', '=', 'approved')]"/>
+                <filter name="cancelled" string="已取消" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter name="execution_failed" string="执行失败"
+                        domain="[('execution_state', '=', 'failed')]"/>
+                <group>
+                    <filter name="group_workflow" string="审批流程" context="{'group_by': 'workflow_id'}"/>
+                    <filter name="group_requester" string="发起人" context="{'group_by': 'requester_id'}"/>
+                    <filter name="group_state" string="状态" context="{'group_by': 'state'}"/>
+                    <filter name="group_company" string="公司" context="{'group_by': 'company_id'}"
+                            groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_approval_task_list" model="ir.ui.view">
+        <field name="name">occ.approval.task.list</field>
+        <field name="model">occ.approval.task</field>
+        <field name="arch" type="xml">
+            <list string="我的待办" create="0" edit="0" delete="0"
+                  decoration-info="state == 'pending'"
+                  decoration-success="state in ['approved', 'completed']"
+                  decoration-danger="state == 'rejected'"
+                  decoration-muted="state == 'cancelled'">
+                <field name="instance_id"/>
+                <field name="node_id"/>
+                <field name="task_kind"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
+                <field name="assigned_at"/>
+                <field name="deadline_at"/>
+                <field name="acted_at" optional="hide"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_approval_task_search" model="ir.ui.view">
+        <field name="name">occ.approval.task.search</field>
+        <field name="model">occ.approval.task</field>
+        <field name="arch" type="xml">
+            <search string="审批任务">
+                <field name="instance_id"/>
+                <field name="node_id"/>
+                <field name="user_id"/>
+                <filter name="my_tasks" string="分配给我" domain="[('user_id', '=', uid)]"/>
+                <filter name="pending" string="待处理" domain="[('state', '=', 'pending')]"/>
+                <filter name="overdue" string="已逾期"
+                        domain="[('state', '=', 'pending'), ('deadline_at', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <group>
+                    <filter name="group_state" string="状态" context="{'group_by': 'state'}"/>
+                    <filter name="group_workflow" string="审批流程"
+                            context="{'group_by': 'workflow_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_approval_instances" model="ir.actions.act_window">
+        <field name="name">审批申请</field>
+        <field name="res_model">occ.approval.instance</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_approval_instance_search"/>
+    </record>
+
+    <record id="action_my_approval_tasks" model="ir.actions.act_window">
+        <field name="name">我的待办</field>
+        <field name="res_model">occ.approval.task</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_approval_task_search"/>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="context">{'search_default_pending': 1}</field>
+    </record>
+</odoo>

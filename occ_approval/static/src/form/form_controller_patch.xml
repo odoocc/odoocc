@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.FormView" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='layout-actions']" position="inside">
+            <button
+                t-if="occApproval.visible and model.root.resId"
+                type="button"
+                t-attf-class="btn btn-outline-{{ occApprovalTone }} o_occ_form_approval_button"
+                t-on-click.stop="onOpenOccApproval"
+                t-att-disabled="occApproval.loading"
+                title="Open approval">
+                <i t-if="occApproval.loading" class="fa fa-spinner fa-spin" aria-hidden="true"/>
+                <span t-else="" t-attf-class="o_occ_form_approval_dot text-bg-{{ occApprovalTone }}" aria-hidden="true"/>
+                <span class="text-truncate" t-esc="occApprovalLabel"/>
+            </button>
+        </xpath>
+    </t>
+</templates>

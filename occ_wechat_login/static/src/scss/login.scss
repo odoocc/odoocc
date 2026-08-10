@@ -1,0 +1,141 @@
+.o_occ_login_card_split {
+    width: 100%;
+    max-width: 860px !important;
+
+    > .card-body {
+        display: grid;
+        grid-template-columns: minmax(300px, 1fr) minmax(280px, 340px);
+        column-gap: 2rem;
+        align-items: center;
+        padding: 2rem;
+
+        > .text-center.pb-3.border-bottom,
+        > .oe_structure,
+        > owl-component,
+        > .text-center.small.mt-4.pt-3.border-top {
+            grid-column: 1 / -1;
+        }
+    }
+
+    .o_occ_wechat_qr_panel {
+        grid-column: 1;
+        min-width: 0;
+        padding-inline-end: 2rem;
+        border-inline-end: 1px solid var(--border-color, #dee2e6);
+    }
+
+    .o_occ_login_password_panel {
+        grid-column: 2;
+        width: 100%;
+        align-self: center;
+    }
+}
+
+// ``website`` replaces the standard login card with this flat container.
+// The page marker is set by our ``web.login`` inheritance, so this remains
+// scoped to the WeChat-enabled login page on browsers without parent selectors.
+.o_occ_login_split_page .oe_website_login_container {
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(100% - 2rem);
+    max-width: 860px;
+    align-items: center;
+    column-gap: 2rem;
+    row-gap: 0;
+    padding: 2rem;
+    margin: 50px auto;
+
+    > .oe_structure,
+    > owl-component {
+        flex: 0 0 100%;
+        min-width: 0;
+    }
+
+    > .o_occ_wechat_qr_panel,
+    > .o_occ_login_password_panel {
+        flex: 1 1 0;
+        min-width: 280px;
+    }
+
+    > .o_occ_wechat_qr_panel {
+        padding-inline-end: 2rem;
+        border-inline-end: 1px solid var(--border-color, #dee2e6);
+    }
+
+    > .o_occ_login_password_panel {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+    }
+}
+
+.o_occ_login_panel_heading {
+    margin-bottom: 1rem;
+}
+
+.o_occ_wechat_qr_frame_wrap {
+    display: flex;
+    min-height: 400px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.o_occ_wechat_qr_frame {
+    display: block;
+    width: 300px;
+    max-width: 100%;
+    height: 400px;
+    border: 0;
+    background: #fff;
+}
+
+@media (max-width: 767.98px) {
+    .o_occ_login_card_split {
+        max-width: 380px !important;
+
+        > .card-body {
+            display: block;
+            padding: 1.5rem;
+        }
+
+        .o_occ_wechat_qr_panel {
+            padding-inline-end: 0;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-inline-end: 0;
+            border-bottom: 1px solid var(--border-color, #dee2e6);
+        }
+    }
+
+    .o_occ_login_split_page .oe_website_login_container {
+        display: block;
+        width: calc(100% - 2rem);
+        max-width: 380px;
+        padding: 1.5rem;
+
+        > .o_occ_wechat_qr_panel,
+        > .o_occ_login_password_panel {
+            width: 100%;
+            min-width: 0;
+        }
+
+        > .o_occ_wechat_qr_panel {
+            padding-inline-end: 0;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-inline-end: 0;
+            border-bottom: 1px solid var(--border-color, #dee2e6);
+        }
+    }
+}
+
+@media (max-width: 359.98px) {
+    .o_occ_login_card_split > .card-body {
+        padding-inline: 1rem;
+    }
+
+    .o_occ_login_split_page .oe_website_login_container {
+        padding-inline: 1rem;
+    }
+}

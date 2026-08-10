@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="occ_approval.ApprovalDashboard">
+        <div class="o_occ_dashboard">
+            <header class="o_occ_dashboard_header">
+                <div>
+                    <h1>Approval center</h1>
+                    <p>Tasks assigned to you and approvals you requested.</p>
+                </div>
+                <button type="button" class="btn btn-outline-secondary" t-on-click="load" t-att-disabled="state.loading">
+                    <i t-att-class="{'fa fa-refresh me-1': true, 'fa-spin': state.loading}" aria-hidden="true"/>
+                    Refresh
+                </button>
+            </header>
+
+            <div t-if="state.loading === true" class="o_occ_dashboard_loading" role="status">
+                <i class="fa fa-spinner fa-spin" aria-hidden="true"/>
+                <span>Loading your approvals…</span>
+            </div>
+
+            <t t-else="">
+                <section class="o_occ_metric_grid" aria-label="Approval summary">
+                    <article t-foreach="countCards" t-as="card" t-key="card.key" t-attf-class="o_occ_metric_card is-{{ card.tone }}">
+                        <span t-attf-class="o_occ_metric_icon text-bg-{{ card.tone }}"><i t-attf-class="fa {{ card.icon }}" aria-hidden="true"/></span>
+                        <div>
+                            <strong t-esc="state.data.counts[card.key] || 0"/>
+                            <span t-esc="card.label"/>
+                        </div>
+                    </article>
+                </section>
+
+                <div class="o_occ_dashboard_columns">
+                    <section class="o_occ_dashboard_section" aria-labelledby="o_occ_pending_heading">
+                        <div class="o_occ_dashboard_section_title">
+                            <div>
+                                <h2 id="o_occ_pending_heading">Pending tasks</h2>
+                                <p>Items currently waiting for your decision or completion.</p>
+                            </div>
+                            <span class="badge text-bg-primary" t-esc="state.data.pending_tasks.length"/>
+                        </div>
+                        <div t-if="!state.data.pending_tasks.length" class="o_occ_dashboard_empty">
+                            <i class="fa fa-check-circle" aria-hidden="true"/>
+                            <strong>All caught up</strong>
+                            <span>No approval task is waiting for you.</span>
+                        </div>
+                        <button
+                            t-foreach="state.data.pending_tasks"
+                            t-as="task"
+                            t-key="task.id"
+                            type="button"
+                            class="o_occ_dashboard_row"
+                            t-on-click="() => this.openTask(task)">
+                            <span t-attf-class="o_occ_row_icon {{ isOverdue(task) ? 'is-overdue' : '' }}"><i t-attf-class="fa {{ task.kind === 'task' ? 'fa-briefcase' : 'fa-check' }}" aria-hidden="true"/></span>
+                            <span class="o_occ_row_content">
+                                <strong class="text-truncate" t-esc="taskTitle(task)"/>
+                                <small class="text-muted text-truncate" t-esc="taskSubtitle(task)"/>
+                            </span>
+                            <span class="o_occ_row_meta">
+                                <span t-if="task.deadline_at" t-att-class="{'text-danger': isOverdue(task), 'text-muted': !isOverdue(task)}" t-esc="task.deadline_at"/>
+                                <span t-attf-class="badge text-bg-{{ isOverdue(task) ? 'danger' : 'primary' }}" t-esc="isOverdue(task) ? 'Overdue' : 'Pending'"/>
+                            </span>
+                            <i class="fa fa-chevron-right text-muted" aria-hidden="true"/>
+                        </button>
+                    </section>
+
+                    <section class="o_occ_dashboard_section" aria-labelledby="o_occ_instances_heading">
+                        <div class="o_occ_dashboard_section_title">
+                            <div>
+                                <h2 id="o_occ_instances_heading">My requests</h2>
+                                <p>Your most recent approval instances.</p>
+                            </div>
+                            <span class="badge text-bg-secondary" t-esc="state.data.instances.length"/>
+                        </div>
+                        <div t-if="!state.data.instances.length" class="o_occ_dashboard_empty compact">
+                            <span>You have not requested any approvals yet.</span>
+                        </div>
+                        <button
+                            t-foreach="state.data.instances"
+                            t-as="instance"
+                            t-key="instance.id"
+                            type="button"
+                            class="o_occ_dashboard_row"
+                            t-on-click="() => this.openInstance(instance)"
+                            t-att-disabled="isOpening(instance.id)">
+                            <span t-attf-class="o_occ_row_icon text-bg-{{ statusClass(instance.state) }}">
+                                <i t-if="isOpening(instance.id)" class="fa fa-spinner fa-spin" aria-hidden="true"/>
+                                <i t-else="" class="fa fa-file-text-o" aria-hidden="true"/>
+                            </span>
+                            <span class="o_occ_row_content">
+                                <strong class="text-truncate" t-esc="instance.source_display_name"/>
+                                <small class="text-muted text-truncate" t-esc="instance.workflow_name"/>
+                            </span>
+                            <span class="o_occ_row_meta">
+                                <span t-if="instance.execution_state === 'failed'" class="text-danger">Execution failed</span>
+                                <span t-attf-class="badge text-bg-{{ statusClass(instance.state) }}" t-esc="stateLabel(instance.state)"/>
+                            </span>
+                            <i class="fa fa-chevron-right text-muted" aria-hidden="true"/>
+                        </button>
+                    </section>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

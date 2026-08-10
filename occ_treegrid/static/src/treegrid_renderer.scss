@@ -1,0 +1,42 @@
+.o_list_renderer .o_treegrid_tbody {
+    .o_treegrid_cell {
+        padding-inline-start: calc(var(--o-treegrid-level, 0) * 1.25rem);
+    }
+
+    .o_treegrid_toggle,
+    .o_treegrid_toggle_spacer {
+        width: 1.25rem;
+        min-width: 1.25rem;
+        height: 1.25rem;
+        line-height: 1.25rem;
+    }
+
+    .o_treegrid_value {
+        flex: 1 1 auto;
+    }
+
+    .o_treegrid_context {
+        opacity: 0.65;
+    }
+
+    .o_treegrid_orphan {
+        --bs-table-accent-bg: rgba(var(--warning-rgb, 255, 193, 7), 0.08);
+    }
+
+    .o_treegrid_draggable .o_handle_cell {
+        cursor: grab;
+    }
+
+    .o_treegrid_dragging .o_handle_cell {
+        cursor: grabbing;
+    }
+
+    .o_treegrid_dragged_descendant {
+        display: none !important;
+    }
+
+    .o_treegrid_placeholder {
+        opacity: 0.25;
+    }
+}
+

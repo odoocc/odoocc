@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="login_wechat_split" inherit_id="web.login" name="OCC Split Login">
+        <xpath expr="//t[@t-call='web.login_layout']" position="before">
+            <t t-if="occ_wechat_qr_url"
+               t-set="pageName"
+               t-value="'o_occ_login_split_page'"/>
+            <t t-if="occ_wechat_qr_url"
+               t-set="login_card_classes"
+               t-value="'o_occ_login_card o_occ_login_card_split'"/>
+        </xpath>
+        <xpath expr="//form[contains(@t-attf-class, 'oe_login_form')]" position="before">
+            <section t-if="occ_wechat_qr_url"
+                     class="o_occ_wechat_qr_panel o_occ_wechat_login"
+                     aria-labelledby="occ_wechat_qr_title">
+
+                <div class="o_occ_wechat_qr_frame_wrap">
+                    <iframe id="occ_wechat_qr_frame"
+                            class="o_occ_wechat_qr_frame"
+                            t-att-src="occ_wechat_qr_url"
+                            title="WeChat login QR code"
+                            width="300"
+                            height="400"
+                            frameborder="0"
+                            scrolling="no"
+                            loading="eager"
+                            referrerpolicy="no-referrer"/>
+                </div>
+                <p class="small text-muted text-center mb-2">
+                    The QR code is provided by WeChat and expires automatically.
+                </p>
+                <div class="text-center" t-if="occ_wechat_auth_link">
+                    <a class="small o_occ_wechat_fallback_link"
+                       t-att-href="occ_wechat_auth_link"
+                       target="_top"
+                       rel="nofollow">
+                        Open WeChat login
+                    </a>
+                </div>
+            </section>
+        </xpath>
+        <xpath expr="//form[contains(@t-attf-class, 'oe_login_form')]" position="attributes">
+            <attribute name="t-attf-class" add="o_occ_login_password_panel" separator=" "/>
+        </xpath>
+        <xpath expr="//form/input[@name='csrf_token']" position="before">
+            <div t-if="occ_wechat_qr_url" class="o_occ_login_panel_heading text-center">
+                <h2 class="h5 mb-1">Password Login</h2>
+                <p class="small text-muted mb-3">Sign in with your verified email and password</p>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="login_wechat" inherit_id="web.login_oauth" name="OCC WeChat Login">
+        <xpath expr="//t[@t-set='auth_btns']" position="after">
+            <t t-if="occ_wechat_auth_link and not occ_wechat_qr_url">
+                <!-- Keep the label in plain QWeb content so it is extracted for translation. -->
+                <t t-set="occ_wechat_body">Sign in with WeChat</t>
+                <t t-set="occ_wechat_button" t-value="[{
+                    'auth_link': occ_wechat_auth_link,
+                    'css_class': 'fa fa-weixin text-success',
+                    'body': occ_wechat_body,
+                    'list_item_class': 'o_occ_wechat_login',
+                }]"/>
+                <t t-set="auth_btns" t-value="auth_btns + occ_wechat_button"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

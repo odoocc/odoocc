@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_approval_workflow_list" model="ir.ui.view">
+        <field name="name">occ.approval.workflow.list</field>
+        <field name="model">occ.approval.workflow</field>
+        <field name="arch" type="xml">
+            <list string="审批流程" create="1" delete="1">
+                <field name="priority" widget="handle"/>
+                <field name="name"/>
+                <field name="code" optional="hide"/>
+                <field name="model_id"/>
+                <field name="action_key"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="published_version_id"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'published'"
+                       decoration-muted="state == 'archived'"/>
+                <field name="active" optional="hide" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_approval_workflow_form" model="ir.ui.view">
+        <field name="name">occ.approval.workflow.form</field>
+        <field name="model">occ.approval.workflow</field>
+        <field name="arch" type="xml">
+            <form string="审批流程">
+                <header>
+                    <button name="%(action_workflow_designer)d" type="action"
+                            string="可视化设计" class="oe_highlight"
+                            context="{'workflow_id': id}" invisible="not id"/>
+                    <button name="action_archive" type="object" string="归档"
+                            class="btn-secondary" invisible="not id or not active"
+                            confirm="归档后将不再用于创建新的审批实例，是否继续？"/>
+                    <button name="action_unarchive" type="object" string="恢复"
+                            class="btn-secondary" invisible="not id or active"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,published,archived"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="已归档" bg_color="text-bg-secondary"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="例如：销售订单确认审批"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="model_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="model_name" readonly="1"/>
+                            <field name="action_key" placeholder="manual"/>
+                            <field name="priority"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="published_version_id" readonly="1"/>
+                            <field name="draft_revision" readonly="1"/>
+                            <field name="auto_execute"/>
+                            <field name="active" invisible="1" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="适用条件">
+                        <field name="applicability_domain_expression" widget="domain"
+                               options="{'model': 'model_name'}"
+                               placeholder="所有记录"/>
+                    </group>
+                    <field name="description" placeholder="说明该流程的适用范围和审批规则。"/>
+                    <notebook>
+                        <page string="已发布版本" name="versions">
+                            <field name="version_ids" readonly="1">
+                                <list create="0" delete="0" edit="0">
+                                    <field name="version"/>
+                                    <field name="action_key"/>
+                                    <field name="published_at"/>
+                                    <field name="published_by_id" widget="many2one_avatar_user"/>
+                                    <field name="checksum_schema" optional="hide"/>
+                                    <field name="checksum" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="草稿定义" name="raw_definition" groups="occ_approval.group_approval_technical">
+                            <field name="draft_definition" widget="json" readonly="1" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_approval_workflow_search" model="ir.ui.view">
+        <field name="name">occ.approval.workflow.search</field>
+        <field name="model">occ.approval.workflow</field>
+        <field name="arch" type="xml">
+            <search string="审批流程">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="model_id"/>
+                <field name="action_key"/>
+                <filter name="published" string="已发布" domain="[('state', '=', 'published')]"/>
+                <filter name="draft" string="草稿" domain="[('state', '=', 'draft')]"/>
+                <filter name="archived" string="已归档" domain="[('active', '=', False)]"
+                        context="{'active_test': False}"/>
+                <group>
+                    <filter name="group_model" string="业务模型" context="{'group_by': 'model_id'}"/>
+                    <filter name="group_company" string="公司" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter name="group_state" string="状态" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_approval_workflows" model="ir.actions.act_window">
+        <field name="name">审批流程</field>
+        <field name="res_model">occ.approval.workflow</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_approval_workflow_search"/>
+        <field name="context">{'search_default_published': 1}</field>
+    </record>
+</odoo>
