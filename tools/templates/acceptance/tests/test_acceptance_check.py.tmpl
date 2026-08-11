@@ -1,0 +1,146 @@
+from odoo.exceptions import AccessError
+from odoo.tests import TransactionCase, new_test_user, tagged
+
+
+SAMPLE_XMLIDS = (
+    "check_installation",
+    "check_configuration",
+    "check_core_flow",
+    "check_security",
+)
+
+
+@tagged("post_install", "-at_install")
+class Test${class_prefix}AcceptanceCheck(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Check = cls.env["${acceptance_model}"]
+        cls.regular_user = new_test_user(
+            cls.env,
+            login="${module_name}_acceptance_regular",
+            groups="base.group_user",
+        )
+        cls.system_user = new_test_user(
+            cls.env,
+            login="${module_name}_acceptance_system",
+            groups="base.group_system",
+        )
+
+    @staticmethod
+    def _record_values(name):
+        return {
+            "name": name,
+            "category": "core_flow",
+            "steps": "执行脱敏验收步骤。",
+            "expected_result": "得到符合公开契约的脱敏结果。",
+        }
+
+    def test_samples_cover_the_generic_acceptance_scope(self):
+        samples = self.Check.browse(
+            [
+                self.env.ref(f"${test_module_name}.{xmlid}").id
+                for xmlid in SAMPLE_XMLIDS
+            ]
+        )
+
+        self.assertEqual(len(samples), len(SAMPLE_XMLIDS))
+        self.assertEqual(
+            set(samples.mapped("category")),
+            {"installation", "configuration", "core_flow", "security"},
+        )
+
+    def test_sample_xmlids_are_noupdate(self):
+        metadata = self.env["ir.model.data"].search(
+            [
+                ("module", "=", "${test_module_name}"),
+                ("name", "in", SAMPLE_XMLIDS),
+            ]
+        )
+
+        self.assertEqual(set(metadata.mapped("name")), set(SAMPLE_XMLIDS))
+        self.assertTrue(all(metadata.mapped("noupdate")))
+
+    def test_statuses_and_sanitized_notes_are_writable(self):
+        check = self.env.ref("${test_module_name}.check_core_flow")
+        expected_statuses = {"pending", "passed", "failed", "blocked"}
+
+        self.assertEqual(
+            set(dict(self.Check._fields["status"].selection)),
+            expected_statuses,
+        )
+        for status in expected_statuses:
+            check.write({"status": status, "notes": f"脱敏测试结论：{status}"})
+            self.assertEqual(check.status, status)
+            self.assertEqual(check.notes, f"脱敏测试结论：{status}")
+
+    def test_acceptance_model_has_no_sensitive_fields(self):
+        sensitive_markers = {
+            "app_id",
+            "appid",
+            "secret",
+            "password",
+            "credential",
+            "token",
+            "openid",
+            "unionid",
+            "email",
+            "verification_link",
+        }
+
+        for field_name in self.Check._fields:
+            self.assertFalse(
+                any(marker in field_name.casefold() for marker in sensitive_markers),
+                f"Sensitive field is not allowed: {field_name}",
+            )
+
+    def test_acl_is_granted_only_to_system_administrators(self):
+        access = self.env.ref(
+            "${test_module_name}.access_${module_name}_acceptance_check_system"
+        )
+
+        self.assertEqual(access.group_id, self.env.ref("base.group_system"))
+        self.assertTrue(access.perm_read)
+        self.assertTrue(access.perm_write)
+        self.assertTrue(access.perm_create)
+        self.assertTrue(access.perm_unlink)
+
+    def test_system_administrator_can_crud_acceptance_records(self):
+        checks = self.Check.with_user(self.system_user)
+        check = checks.create(self._record_values("管理员 CRUD 验收"))
+
+        self.assertEqual(check.read(["name"])[0]["name"], "管理员 CRUD 验收")
+        check.write({"status": "passed", "notes": "脱敏通过"})
+        self.assertEqual((check.status, check.notes), ("passed", "脱敏通过"))
+        check.unlink()
+        self.assertFalse(check.exists())
+
+    def test_regular_internal_user_is_denied_every_crud_operation(self):
+        check = self.env.ref("${test_module_name}.check_core_flow")
+        regular_check = check.with_user(self.regular_user)
+        regular_model = self.Check.with_user(self.regular_user)
+        operations = {
+            "read": lambda: regular_check.read(["name"]),
+            "create": lambda: regular_model.create(
+                self._record_values("普通用户越权创建")
+            ),
+            "write": lambda: regular_check.write({"notes": "越权写入"}),
+            "unlink": regular_check.unlink,
+        }
+
+        for operation_name, operation in operations.items():
+            with self.subTest(operation=operation_name):
+                with self.assertRaises(AccessError):
+                    operation()
+
+    def test_menu_and_action_are_connected(self):
+        root_menu = self.env.ref("${test_module_name}.menu_acceptance_root")
+        menu = self.env.ref("${test_module_name}.menu_acceptance_check")
+        action = self.env.ref("${test_module_name}.action_acceptance_check")
+
+        self.assertEqual(root_menu.parent_id, self.env.ref("base.menu_administration"))
+        self.assertEqual(root_menu.group_ids, self.env.ref("base.group_system"))
+        self.assertEqual(menu.parent_id, root_menu)
+        self.assertEqual(menu.action, action)
+        self.assertEqual(action.res_model, "${acceptance_model}")
+        self.assertEqual(action.view_mode, "list,form")

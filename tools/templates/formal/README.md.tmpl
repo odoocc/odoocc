@@ -1,0 +1,91 @@
+# OdooCC ${title}（`${module_name}`）
+
+${description}
+
+本目录是正式模块，只承载经过测试、可评估用于生产部署的能力。初始脚手架仅建立安装、
+文档和测试基线；在发布前必须用真实模型、权限、界面和业务回归测试替换通用说明。
+
+## 功能边界与适用场景
+
+- 中文摘要：${summary}
+- 目标 Odoo 版本：19.0。
+- 模块不装载固定演示数据，也不依赖 `${test_module_name}`。
+- 业务实现不得绕过 ACL、记录规则、CSRF 或外部平台的真实认证。
+
+实现功能时，请在本节准确补充目标角色、核心流程、不支持的场景以及公共模型、RPC 或路由
+契约，不得描述尚未实现的能力。
+
+## English summary
+
+${summary_en}
+
+This production module targets Odoo 19 and is licensed under AGPL-3. Its companion
+`${test_module_name}` module is only for demonstrations and acceptance testing.
+
+## 安装与配置
+
+将 `addons_odoocc` 加入 `addons_path`，在独立数据库中安装：
+
+```bash
+./odoo-bin -d <数据库名> \
+    --addons-path=addons,addons_odoocc \
+    -i ${module_name} \
+    --stop-after-init
+```
+
+初始脚手架没有业务配置项。实现真实功能后，应在这里逐项说明默认值、必填配置、菜单入口、
+外部依赖和安全前置条件。
+
+## 使用、升级与卸载
+
+实现业务流程后，应按角色描述操作步骤和异常处理。升级前备份数据库与附件目录，并在生产
+副本中先执行：
+
+```bash
+./odoo-bin -d <测试数据库> \
+    --addons-path=addons,addons_odoocc \
+    -u ${module_name} \
+    --stop-after-init
+```
+
+涉及数据或 XML ID 变化时必须增加迁移脚本和回归测试。卸载影响取决于最终模型和依赖，
+发布前应明确哪些数据会删除、哪些外部配置需要人工清理。
+
+## 权限与安全
+
+- 面向用户的新持久模型提供最小 ACL，并测试允许与拒绝路径；内部存储模型若有意不授予
+  ACL，必须说明受控调用边界并测试普通用户无法直接访问。
+- 敏感字段不能只靠视图隐藏；按需要使用字段 `groups`、记录规则和脱敏日志。
+- 密钥、令牌、个人信息和生产数据不得进入代码、README、样例或测试日志。
+- 外部服务在自动测试中必须 mock，不能让 CI 调用真实平台。
+
+实现新能力后，应把本节替换为该模块的具体安全边界。
+
+## 自动测试
+
+定向运行服务端测试：
+
+```bash
+./odoo-bin -d <测试数据库> \
+    --addons-path=addons,addons_odoocc \
+    -i ${module_name} \
+    --test-enable \
+    --test-tags=/${module_name} \
+    --stop-after-init
+```
+
+当前安装测试只验证模块已由 Odoo 正确安装。每一项真实行为都必须补充对应的正常、失败、
+权限和升级回归测试；前端行为还要增加带 `${module_name}` 标签的 Hoot 测试。
+
+## 演示与验收模块
+
+`${test_module_name}` 是对应的可安装验收模块，提供管理员脱敏验收清单。它不应成为正式
+依赖，也不建议在生产环境安装。实现真实功能后，应同步调整清单或增加可操作演示模型，使其
+直接验证本模块的公开契约。
+
+## 许可证与联系
+
+- 作者：Odoo老赵
+- 官网：<https://odoocc.com>
+- 支持邮箱：<156277468@qq.com>
+- 许可证：[GNU Affero General Public License v3.0](../LICENSE)

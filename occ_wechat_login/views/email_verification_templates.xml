@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="email_page" name="OCC Email Verification">
+    <template id="email_page" name="OdooCC Email Verification">
         <t t-call="web.login_layout">
             <div class="oe_login_form">
                 <h4 class="text-center mb-3">Verify your email address</h4>
                 <p class="text-muted text-center">
-                    Choose a unique community username and verify your email address to activate OCC access.
+                    Choose a unique community username and verify your email address to activate OdooCC access.
                 </p>
 
                 <div class="alert alert-danger" t-if="error" role="alert">
@@ -60,7 +60,7 @@
         </t>
     </template>
 
-    <template id="verify_confirm" name="OCC Confirm Email Verification">
+    <template id="verify_confirm" name="OdooCC Confirm Email Verification">
         <t t-call="web.login_layout">
             <div class="oe_login_form">
                 <h4 class="text-center mb-3">Confirm email verification</h4>
@@ -70,7 +70,7 @@
                 <t t-if="not error">
                     <p class="text-center">
                         Confirm community username <strong t-out="community_username"/> and verify
-                        <strong t-out="masked_email"/> for your OCC account.
+                        <strong t-out="masked_email"/> for your OdooCC account.
                     </p>
                     <form action="/occ/wechat/email/verify" method="post">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -87,7 +87,7 @@
         </t>
     </template>
 
-    <template id="verify_result" name="OCC Email Verification Result">
+    <template id="verify_result" name="OdooCC Email Verification Result">
         <t t-call="web.login_layout">
             <div class="oe_login_form text-center">
                 <h4 class="mb-3">

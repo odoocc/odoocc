@@ -1,4 +1,4 @@
-"""Model and service tests for OCC WeChat authentication."""
+"""Model and service tests for OdooCC WeChat authentication."""
 
 import json
 from datetime import timedelta

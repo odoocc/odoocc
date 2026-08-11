@@ -1,4 +1,4 @@
-"""HTTP flow tests for OCC WeChat login and email verification."""
+"""HTTP flow tests for OdooCC WeChat login and email verification."""
 
 import json
 import re

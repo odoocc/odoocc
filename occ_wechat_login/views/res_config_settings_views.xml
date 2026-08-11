@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//block[@name='integration']" position="inside">
                 <setting id="occ_wechat_login_setting"
-                         string="OCC WeChat Login"
+                         string="OdooCC WeChat Login"
                          help="Allow users to sign in by scanning a QR code with WeChat.">
                     <field name="occ_wechat_enabled"/>
                     <div class="content-group" invisible="not occ_wechat_enabled">

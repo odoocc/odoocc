@@ -1,4 +1,4 @@
-# OCC 层级列表（`occ_treegrid`）
+# OdooCC 层级列表（`occ_treegrid`）
 
 `occ_treegrid` 在 Odoo 标准列表视图上增加树形层级、展开/收起、祖先上下文展示和同级
 拖拽排序。它只对明确继承服务端混入并显式声明视图选项的模型生效，不会猜测任意模型的
@@ -54,21 +54,26 @@ TreeGrid 适合“父子层级 + 同级人工排序”的数据。若业务需�
 - 排序值按 `10、20、30...` 规范化，并在保存点内对完整同级集合加非阻塞锁。
 - 并发期间层级或同级集合发生变化时，中止并回滚本次排序。
 
-## 安装与升级
+## 安装、升级与卸载
 
-1. 将 `addons_occ` 加入 Odoo 的 `addons_path`。
+1. 将本仓库目录 `addons_odoocc` 加入 Odoo 的 `addons_path`。
 2. 更新应用列表。
-3. 安装“OCC 层级列表”（技术名 `occ_treegrid`）。
+3. 安装“OdooCC 层级列表（TreeGrid）”（技术名 `occ_treegrid`）。
 4. 让需要接入的业务模块在清单中依赖 `occ_treegrid`。
 
 命令行示例：
 
 ```bash
-./odoo-bin -d <数据库名> -i occ_treegrid --stop-after-init
-./odoo-bin -d <数据库名> -u occ_treegrid,<业务模块> --stop-after-init
+./odoo-bin -d <数据库名> --addons-path=addons,addons_odoocc \
+    -i occ_treegrid --stop-after-init
+./odoo-bin -d <数据库名> --addons-path=addons,addons_odoocc \
+    -u occ_treegrid,<业务模块> --stop-after-init
 ```
 
 本模块没有独立菜单。安装后只有使用 `js_class="occ_treegrid"` 的列表视图会改变行为。
+升级前请备份数据库，并在测试库先升级本模块及所有接入它的业务模块。卸载前必须先卸载或修改
+所有依赖 `occ_treegrid` 的业务模块；混入本身不创建业务数据，但依赖模块仍可能拥有相关视图和
+模型数据。
 
 ## 服务端模型配置
 
@@ -213,6 +218,12 @@ class ExampleNode(models.Model):
 - 检查当前用户是否受记录规则限制而无法读取父节点。
 - 不要通过放宽 `sudo()` 解决；应从业务权限或数据完整性上确认预期可见范围。
 
+## 演示与验收模块
+
+仓库中的 `occ_treegrid_test` 是可安装的演示/验收模块，提供示例层级模型、样例数据、可见菜单
+和回归测试。它适合开发、培训及上线验收，不建议安装到生产数据库。正式业务模块应依赖
+`occ_treegrid` 并定义自己的模型、权限和数据，而不应依赖 `occ_treegrid_test`。
+
 ## 验证与维护
 
 - Python 测试：`tests/test_treegrid_mixin.py`，覆盖祖先补入、上限、权限、归档同级、
@@ -221,6 +232,18 @@ class ExampleNode(models.Model):
   拖拽约束、RPC 和通知。
 - 修改模块后应执行 Python 编译、XML 解析，并运行上述服务端与 Hoot 测试。
 
+命令行示例：
+
+```bash
+./odoo-bin -d <测试数据库> --addons-path=addons,addons_odoocc \
+    -i occ_treegrid --test-enable --stop-after-init --test-tags=/occ_treegrid
+./odoo-bin -d <测试数据库> --addons-path=addons,addons_odoocc \
+    -u web,occ_treegrid --test-enable --stop-after-init \
+    --test-tags='/web:WebSuite.test_unit_desktop[@occ_treegrid]'
+```
+
+第二条命令需要本机可用的 Chrome/Chromium。测试数据库应与生产数据库隔离。
+
 ## 为什么保留英文技术标识（Why English identifiers remain）
 
 模型名、字段名、XML 属性、视图注册键、RPC 名、API 参数和值（例如
@@ -228,3 +251,18 @@ class ExampleNode(models.Model):
 `roots`、`all`、`before`、`after`）属于稳定技术契约。将它们翻译为中文会导致视图解析、
 外部调用、继承或已有数据失效，因此继续保留英文；面向用户的异常、通知、按钮和辅助功能
 说明则使用自然中文。
+
+## 许可证与联系
+
+- 许可证：[GNU Affero General Public License v3.0](../LICENSE)
+- 官网：<https://odoocc.com>
+- 作者：Odoo老赵
+- 支持邮箱：<156277468@qq.com>
+
+## English summary
+
+`occ_treegrid` is an AGPL-3 extension for Odoo 19 that turns an explicitly configured
+standard list view into an accessible hierarchical TreeGrid. It adds ancestor-aware
+search results and transaction-safe sibling resequencing without globally replacing
+Odoo's native list renderer. Install `occ_treegrid_test` only in development or
+acceptance environments for a ready-to-use demonstration.

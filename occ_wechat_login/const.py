@@ -1,4 +1,4 @@
-"""Shared constants for OCC WeChat authentication and email verification."""
+"""Shared constants for OdooCC WeChat authentication and email verification."""
 
 WECHAT_LOGIN_STATE_SESSION_KEY = "occ_wechat_login_states"
 WECHAT_LOGIN_GRANT_SESSION_KEY = "occ_wechat_login_grant"

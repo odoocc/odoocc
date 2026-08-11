@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_occ_treegrid_test_node_list" model="ir.ui.view">
+        <field name="name">occ.treegrid.test.node.list</field>
+        <field name="model">occ.treegrid.test.node</field>
+        <field name="arch" type="xml">
+            <list string="TreeGrid 层级节点"
+                  js_class="occ_treegrid"
+                  default_order="sequence,id"
+                  decoration-muted="not active">
+                <field name="sequence" widget="handle"/>
+                <field name="name"
+                       options="{'occ_treegrid_column': True,
+                                 'occ_treegrid_default_expand': 'all'}"/>
+                <field name="parent_id"
+                       optional="hide"
+                       options="{'occ_treegrid_parent': True}"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_occ_treegrid_test_node_form" model="ir.ui.view">
+        <field name="name">occ.treegrid.test.node.form</field>
+        <field name="model">occ.treegrid.test.node</field>
+        <field name="arch" type="xml">
+            <form string="TreeGrid 层级节点">
+                <sheet>
+                    <widget name="web_ribbon"
+                            title="已归档"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent_id"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group string="说明">
+                        <field name="note" nolabel="1" placeholder="记录该演示节点的用途……"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_occ_treegrid_test_node_search" model="ir.ui.view">
+        <field name="name">occ.treegrid.test.node.search</field>
+        <field name="model">occ.treegrid.test.node</field>
+        <field name="arch" type="xml">
+            <search string="搜索 TreeGrid 层级节点">
+                <field name="name"/>
+                <field name="parent_id"/>
+                <separator/>
+                <filter name="archived"
+                        string="已归档"
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_occ_treegrid_test_node" model="ir.actions.act_window">
+        <field name="name">TreeGrid 层级节点</field>
+        <field name="res_model">occ.treegrid.test.node</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_occ_treegrid_test_node_list"/>
+        <field name="search_view_id" ref="view_occ_treegrid_test_node_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">创建一个 TreeGrid 层级节点</p>
+            <p>通过父节点建立层级，并用列表手柄调整同级顺序。</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_occ_treegrid_test_root"
+              name="OdooCC TreeGrid 演示"
+              sequence="95"
+              groups="base.group_user"/>
+    <menuitem id="menu_occ_treegrid_test_node"
+              name="层级节点"
+              parent="menu_occ_treegrid_test_root"
+              action="action_occ_treegrid_test_node"
+              sequence="10"
+              groups="base.group_user"/>
+</odoo>

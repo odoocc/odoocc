@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="check_configuration_https_callback" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">10</field>
+        <field name="name">确认 HTTPS、基础地址与微信回调域</field>
+        <field name="category">configuration</field>
+        <field name="steps">在生产等价环境确认 HTTPS 和反向代理设置正确；核对 web.base.url；在微信开放平台核对已审核网站应用的授权回调域。不要把 AppID、AppSecret 或后台截图粘贴到备注。</field>
+        <field name="expected_result">系统生成的回调地址为当前 HTTPS 域名下的 /occ/wechat/callback，且与微信开放平台允许的回调域一致。</field>
+    </record>
+
+    <record id="check_configuration_wechat_settings" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">20</field>
+        <field name="name">保存微信登录配置</field>
+        <field name="category">configuration</field>
+        <field name="steps">通过清单页的“前往微信登录配置”进入常规设置的集成区；选择本轮要验收的新建用户类型，在正式配置页填写凭据并启用微信登录。凭据只保存在正式模块配置中。</field>
+        <field name="expected_result">设置可正常保存；启用状态下正式配置会要求 AppID 与 AppSecret；清单模型中没有任何凭据字段。</field>
+    </record>
+
+    <record id="check_configuration_outgoing_mail" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">30</field>
+        <field name="name">确认真实邮箱发送链路</field>
+        <field name="category">configuration</field>
+        <field name="steps">在 Odoo 正式邮件配置中测试发件服务器，再使用专用验收邮箱接收邮件。不要在备注中记录邮箱密码、SMTP 授权密码或完整收件地址。</field>
+        <field name="expected_result">发件服务器测试成功，验收邮箱能够接收来自正式模板的验证邮件与首次凭据邮件。</field>
+    </record>
+
+    <record id="check_qr_scan_real_wechat" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">40</field>
+        <field name="name">使用真实微信扫描登录二维码</field>
+        <field name="category">qr_scan</field>
+        <field name="steps">退出 Odoo，在无现有会话的浏览器窗口访问 /web/login；确认密码表单仍可用；使用真实微信扫描页面中的官方二维码并在微信端授权。</field>
+        <field name="expected_result">二维码正常显示并可扫码；授权后浏览器回到本站，最终页面地址不保留 code/state 参数；Odoo、反向代理和日志采集链路不记录明文 AppSecret、Token 或微信授权码。</field>
+    </record>
+
+    <record id="check_qr_scan_cancel_retry" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">50</field>
+        <field name="name">取消或过期后重新扫码</field>
+        <field name="category">qr_scan</field>
+        <field name="steps">在一次真实扫码中取消授权，或等待当前二维码状态过期；刷新登录页后使用新二维码重新扫码。不要手工构造 callback、state 或 grant。</field>
+        <field name="expected_result">取消、过期或已消费状态不能登录；刷新后生成的新流程可以正常完成，且不会跳转到站外地址。</field>
+    </record>
+
+    <record id="check_first_account_onboarding" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">60</field>
+        <field name="name">首次扫码进入开户引导</field>
+        <field name="category">first_account</field>
+        <field name="steps">使用从未绑定本环境的真实微信完成扫码；查看首次进入页面，再由管理员在用户列表中核对新增账号。不要在备注中复制 UnionID、OpenID 或技术登录名。</field>
+        <field name="expected_result">系统只创建一个用户，并进入社区用户名与邮箱引导；技术登录名不向用户展示；可用的微信昵称可作为可编辑用户名建议。</field>
+    </record>
+
+    <record id="check_email_verification_request" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">70</field>
+        <field name="name">提交社区用户名与验收邮箱</field>
+        <field name="category">email_verification</field>
+        <field name="steps">在首次开户引导中填写唯一、合规的社区用户名和专用验收邮箱，提交验证邮件；查看真实邮箱的收件箱与垃圾邮件目录。</field>
+        <field name="expected_result">页面不提前显示正式邮箱或密码；验证邮件送达；重复用户名、重复邮箱和不合规输入会被明确拒绝。</field>
+    </record>
+
+    <record id="check_email_verification_confirm" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">80</field>
+        <field name="name">确认邮箱并接收首次凭据邮件</field>
+        <field name="category">email_verification</field>
+        <field name="steps">打开真实验证邮件，确认页面显示社区用户名和掩码邮箱，再通过页面按钮完成确认；检查第二封首次凭据邮件。不要把验证链接或初始密码写入清单。</field>
+        <field name="expected_result">确认后邮箱成为正式邮箱及登录名，社区用户名成为显示名称；首次开户只发送一次初始凭据邮件；验证链接不能重复使用。</field>
+    </record>
+
+    <record id="check_repeated_wechat_login" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">90</field>
+        <field name="name">退出后再次使用微信登录</field>
+        <field name="category">repeated_login</field>
+        <field name="steps">完成邮箱验证后退出 Odoo，清除当前 Odoo 会话，再使用同一真实微信扫描新二维码登录。</field>
+        <field name="expected_result">系统进入原有账号，不重复开户，也不再次要求已完成的邮箱验证；管理员核对用户总数没有因此增加。</field>
+    </record>
+
+    <record id="check_repeated_password_login" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">100</field>
+        <field name="name">使用已验证邮箱再次登录</field>
+        <field name="category">repeated_login</field>
+        <field name="steps">从凭据邮件直接读取登录邮箱和初始密码，在标准 Odoo 登录表单完成一次登录，并按上线流程修改密码。不要把密码或完整邮箱抄入备注。</field>
+        <field name="expected_result">已验证邮箱可以作为登录名；标准密码登录成功；修改密码后旧密码失效，微信扫码登录仍然可用。</field>
+    </record>
+
+    <record id="check_account_binding_reuse" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">110</field>
+        <field name="name">确认同一微信始终绑定同一账号</field>
+        <field name="category">account_binding</field>
+        <field name="steps">分别在两个干净浏览器会话中使用同一真实微信登录；由管理员在用户安全页核对绑定关系，但不要复制身份标识到验收清单。</field>
+        <field name="expected_result">同一 UnionID 始终解析为同一用户；不会按 OpenID 或浏览器会话重复创建账号；停用的绑定账号不能被绕过并重新创建。</field>
+    </record>
+
+    <record id="check_account_binding_duplicate_email" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">120</field>
+        <field name="name">确认重复邮箱不会自动合并账号</field>
+        <field name="category">account_binding</field>
+        <field name="steps">使用另一个未绑定的真实微信进入开户引导，尝试提交已被其他启用或停用用户占用的验收邮箱。仅记录脱敏错误结论。</field>
+        <field name="expected_result">系统拒绝重复邮箱，不自动合并两个账号，不改变原账号的微信绑定、登录名或用户类型。</field>
+    </record>
+
+    <record id="check_user_type_portal" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">130</field>
+        <field name="name">验收门户用户开户模式</field>
+        <field name="category">user_type</field>
+        <field name="steps">在正式配置中选择“门户用户”，使用未绑定本环境的真实微信完成首次扫码和邮箱验证；由管理员核对用户组。不得通过改 UnionID 或直调内部方法复用旧账号。</field>
+        <field name="expected_result">新账号具有门户用户组而非内部用户组；邮箱验证前后用户类型保持为门户用户；门户用户不能访问未授权后台功能。</field>
+    </record>
+
+    <record id="check_user_type_internal" model="occ.wechat.login.acceptance.check">
+        <field name="sequence">140</field>
+        <field name="name">验收内部用户开户模式</field>
+        <field name="category">user_type</field>
+        <field name="steps">在正式配置中选择“内部用户”，使用另一个未绑定本环境的真实微信完成首次扫码和邮箱验证；由管理员核对用户组。验收环境应预先限制内部用户可访问的业务范围。</field>
+        <field name="expected_result">新账号具有内部用户组而非门户用户组；邮箱验证前后用户类型保持为内部用户；实际可访问范围符合部署方 ACL 与记录规则。</field>
+    </record>
+</odoo>

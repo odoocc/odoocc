@@ -43,7 +43,7 @@ def _redact_record(record, pattern):
 
 
 class OccWechatWerkzeugFilter(logging.Filter):
-    """Redact credentials from OCC callback and verification access logs."""
+    """Redact credentials from OdooCC callback and verification access logs."""
 
     marker = "occ_wechat_login.werkzeug_sensitive_query.v1"
 

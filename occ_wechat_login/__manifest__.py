@@ -1,16 +1,16 @@
 {
-    "name": "OCC WeChat Login",
-    "version": "19.0.4.0.4",
+    "name": "OdooCC 微信扫码登录",
+    "version": "19.0.4.0.5",
     "category": "Authentication",
-    "summary": "Embedded WeChat login with verified-email credentials",
+    "summary": "微信扫码登录、社区用户名、邮箱验证与密码凭据",
     "description": """
-Authenticate Odoo users with an embedded WeChat QR Connect flow, bind their
-UnionID, verify a unique community username and email login, and deliver the
-first password while preserving the configured user type.
+通过内嵌微信 QRConnect 流程认证 Odoo 用户，以 UnionID 绑定账号，验证唯一的
+社区用户名和邮箱登录名，并在保持所配置用户类型的前提下发送首次登录凭据。
 """,
-    "author": "OCC",
+    "author": "Odoo老赵",
     "website": "https://odoocc.com",
-    "license": "LGPL-3",
+    "support": "156277468@qq.com",
+    "license": "AGPL-3",
     "depends": ["web", "mail", "base_setup"],
     "post_load": "post_load",
     "data": [

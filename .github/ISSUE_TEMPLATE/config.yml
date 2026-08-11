@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全漏洞（请勿公开）
+    url: https://github.com/odoocc/odoocc/blob/main/SECURITY.md
+    about: 请先阅读 SECURITY.md，再通过其中的邮箱私下报告；不要创建公开 Issue。

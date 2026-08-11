@@ -1,0 +1,14 @@
+from odoo.tests import TransactionCase, tagged
+
+
+@tagged("post_install", "-at_install")
+class Test${class_prefix}Installation(TransactionCase):
+    def test_module_is_installed(self):
+        module = self.env["ir.module.module"].search(
+            [("name", "=", "${module_name}")],
+            limit=1,
+        )
+
+        self.assertTrue(module)
+        self.assertEqual(module.state, "installed")
+

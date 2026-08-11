@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="login_wechat_split" inherit_id="web.login" name="OCC Split Login">
+    <template id="login_wechat_split" inherit_id="web.login" name="OdooCC Split Login">
         <xpath expr="//t[@t-call='web.login_layout']" position="before">
             <t t-if="occ_wechat_qr_url"
                t-set="pageName"
@@ -50,7 +50,7 @@
         </xpath>
     </template>
 
-    <template id="login_wechat" inherit_id="web.login_oauth" name="OCC WeChat Login">
+    <template id="login_wechat" inherit_id="web.login_oauth" name="OdooCC WeChat Login">
         <xpath expr="//t[@t-set='auth_btns']" position="after">
             <t t-if="occ_wechat_auth_link and not occ_wechat_qr_url">
                 <!-- Keep the label in plain QWeb content so it is extracted for translation. -->

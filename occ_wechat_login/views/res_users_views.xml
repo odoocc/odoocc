@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_users_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='page_security']" position="inside">
-                <group name="occ_wechat_identity" string="OCC WeChat Identity" groups="base.group_system">
+                <group name="occ_wechat_identity" string="OdooCC WeChat Identity" groups="base.group_system">
                     <group>
                         <field name="occ_wechat_unionid" string="WeChat UnionID" readonly="1"/>
                         <field name="occ_wechat_openid" string="WeChat OpenID" readonly="1"/>

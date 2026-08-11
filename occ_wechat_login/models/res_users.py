@@ -47,7 +47,7 @@ class ResUsers(models.Model):
         groups="base.group_system",
     )
     occ_community_username = fields.Char(
-        string="OCC Community Username",
+        string="OdooCC Community Username",
         copy=False,
         index=True,
     )
@@ -57,7 +57,7 @@ class ResUsers(models.Model):
         groups=fields.NO_ACCESS,
     )
     occ_pending_community_username = fields.Char(
-        string="Pending OCC Community Username",
+        string="Pending OdooCC Community Username",
         copy=False,
         groups="base.group_system",
     )
@@ -107,11 +107,11 @@ class ResUsers(models.Model):
     )
     _occ_verified_email_unique = models.Constraint(
         "UNIQUE(occ_verified_email)",
-        "A verified email address can only be linked to one OCC user.",
+        "A verified email address can only be linked to one OdooCC user.",
     )
     _occ_username_unique = models.Constraint(
         "UNIQUE(occ_community_username_normalized)",
-        "An OCC community username can only be linked to one user.",
+        "An OdooCC community username can only be linked to one user.",
     )
 
     @api.depends(

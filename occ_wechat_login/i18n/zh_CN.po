@@ -118,8 +118,8 @@ msgstr "验证邮件已发送，请检查您的收件箱。"
 
 #. module: occ_wechat_login
 #: model:ir.model.constraint,message:occ_wechat_login.constraint_res_users_occ_verified_email_unique
-msgid "A verified email address can only be linked to one OCC user."
-msgstr "一个已验证邮箱只能关联一个 OCC 用户。"
+msgid "A verified email address can only be linked to one OdooCC user."
+msgstr "一个已验证邮箱只能关联一个 OdooCC 用户。"
 
 #. module: occ_wechat_login
 #: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_res_config_settings_occ_wechat
@@ -128,8 +128,8 @@ msgstr "允许用户使用微信扫描二维码登录。"
 
 #. module: occ_wechat_login
 #: model:ir.model.constraint,message:occ_wechat_login.constraint_res_users_occ_username_unique
-msgid "An OCC community username can only be linked to one user."
-msgstr "一个 OCC 社区用户名只能关联一个用户。"
+msgid "An OdooCC community username can only be linked to one user."
+msgstr "一个 OdooCC 社区用户名只能关联一个用户。"
 
 #. module: occ_wechat_login
 #. odoo-python
@@ -153,8 +153,8 @@ msgstr "请检查收件箱并打开验证链接。如有需要，可在下方修
 #: model_terms:ir.ui.view,arch_db:occ_wechat_login.email_page
 msgid ""
 "Choose a unique community username and verify your email address to activate"
-" OCC access."
-msgstr "请选择唯一的社区用户名并验证邮箱地址，以激活 OCC 权限。"
+" OdooCC access."
+msgstr "请选择唯一的社区用户名并验证邮箱地址，以激活 OdooCC 权限。"
 
 #. module: occ_wechat_login
 #: model_terms:ir.ui.view,arch_db:occ_wechat_login.email_page
@@ -258,48 +258,48 @@ msgstr "新建用户类型"
 
 #. module: occ_wechat_login
 #: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_community_username
-msgid "OCC Community Username"
-msgstr "OCC 社区用户名"
+msgid "OdooCC Community Username"
+msgstr "OdooCC 社区用户名"
 
 #. module: occ_wechat_login
 #: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_users_form_occ_wechat
-msgid "OCC WeChat Identity"
-msgstr "OCC 微信身份"
+msgid "OdooCC WeChat Identity"
+msgstr "OdooCC 微信身份"
 
 #. module: occ_wechat_login
 #: model_terms:ir.ui.view,arch_db:occ_wechat_login.view_res_config_settings_occ_wechat
-msgid "OCC WeChat Login"
-msgstr "OCC 微信登录"
+msgid "OdooCC WeChat Login"
+msgstr "OdooCC 微信登录"
 
 #. module: occ_wechat_login
 #: model:mail.template,name:occ_wechat_login.mail_template_email_verification
-msgid "OCC: Email Verification"
-msgstr "OCC：邮箱验证"
+msgid "OdooCC: Email Verification"
+msgstr "OdooCC：邮箱验证"
 
 #. module: occ_wechat_login
 #: model:mail.template,name:occ_wechat_login.mail_template_initial_credentials
-msgid "OCC: Initial Login Credentials"
-msgstr "OCC：初始登录凭据"
+msgid "OdooCC: Initial Login Credentials"
+msgstr "OdooCC：初始登录凭据"
 
 #. module: occ_wechat_login
 #: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_community_username_normalized
 msgid "Occ Community Username Normalized"
-msgstr "OCC 社区用户名规范值"
+msgstr "OdooCC 社区用户名规范值"
 
 #. module: occ_wechat_login
 #: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_email_send_window_count
 msgid "Occ Email Send Window Count"
-msgstr "OCC 邮件发送窗口计数"
+msgstr "OdooCC 邮件发送窗口计数"
 
 #. module: occ_wechat_login
 #: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_email_send_window_start
 msgid "Occ Email Send Window Start"
-msgstr "OCC 邮件发送窗口起始时间"
+msgstr "OdooCC 邮件发送窗口起始时间"
 
 #. module: occ_wechat_login
 #: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_email_verification_nonce
 msgid "Occ Email Verification Nonce"
-msgstr "OCC 邮箱验证随机值"
+msgstr "OdooCC 邮箱验证随机值"
 
 #. module: occ_wechat_login
 #: model_terms:ir.ui.view,arch_db:occ_wechat_login.login_wechat_split
@@ -313,8 +313,8 @@ msgstr "密码登录"
 
 #. module: occ_wechat_login
 #: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_pending_community_username
-msgid "Pending OCC Community Username"
-msgstr "待确认的 OCC 社区用户名"
+msgid "Pending OdooCC Community Username"
+msgstr "待确认的 OdooCC 社区用户名"
 
 #. module: occ_wechat_login
 #: model:ir.model.fields,field_description:occ_wechat_login.field_res_users__occ_pending_email
@@ -668,8 +668,8 @@ msgstr "并验证"
 
 #. module: occ_wechat_login
 #: model_terms:ir.ui.view,arch_db:occ_wechat_login.verify_confirm
-msgid "for your OCC account."
-msgstr "作为您的 OCC 账号邮箱。"
+msgid "for your OdooCC account."
+msgstr "作为您的 OdooCC 账号邮箱。"
 
 #. module: occ_wechat_login
 #: model_terms:ir.ui.view,arch_db:occ_wechat_login.email_page

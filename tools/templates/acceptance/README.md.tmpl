@@ -1,0 +1,86 @@
+# OdooCC ${title}验收（`${test_module_name}`）
+
+> 本模块仅用于开发、演示和验收，不建议在生产环境安装。
+
+`${test_module_name}` 是正式模块 `${module_name}` 的可安装验收辅助模块。它提供管理员可
+维护的通用清单，记录“待验收、通过、失败、阻塞”和脱敏备注，不复制正式实现，也不提供
+伪造成功路径。
+
+## English summary
+
+`${test_module_name}` is an installable, administrator-only acceptance companion for
+`${module_name}`. It records sanitized results for installation, configuration, core-flow,
+and security checks. Its manifest exposes dependency-free metadata for an optional unified demo
+menu, while the module remains independently installable. Do not install it in production.
+
+## 验收范围与功能边界
+
+- 正式能力摘要：${summary}
+- 验证模块安装、基础配置、核心业务流程和权限/安全边界。
+- 不保存密码、AppSecret、Token、验证链接或完整个人身份标识。
+- 不调用真实外部平台，不模拟认证，不绕过正式模块的权限或业务校验。
+
+通用清单只是起点。正式模块实现后，应把步骤和预期结果改成可重复的业务验收项；适合直接
+演示的能力可以增加最小样例模型，但不得把生产逻辑复制进本模块。
+
+## 安装与菜单
+
+先在非生产数据库安装正式模块，再安装本模块：
+
+```bash
+./odoo-bin -d <非生产数据库> \
+    --addons-path=addons,addons_odoocc \
+    -i ${test_module_name} \
+    --stop-after-init
+```
+
+系统管理员可从“设置”下的“OdooCC ${title}验收”进入清单。普通内部用户、门户用户和公共
+用户没有清单模型访问权。
+
+## 统一演示入口协议
+
+本模块可以单独安装，不依赖、不导入部署侧的 `occ_odoocc_demo`。Manifest 中的
+`odoocc_demo` 只是版本化的纯数据协议：统一演示环境安装聚合模块后，可将本模块
+原有菜单纳入“${demo_category_label}”分类；未安装聚合模块时，原有菜单和权限完全不受影响。
+
+- 可被接管的模块菜单：`${test_module_name}.menu_acceptance_root`
+- 默认可点击入口：`${test_module_name}.menu_acceptance_check`
+- 分类技术值：`${demo_category}`
+
+聚合模块只能重组菜单层级，不得扩大模型 ACL、菜单用户组或正式模块的功能边界。
+
+## 样例与升级语义
+
+四条通用验收记录使用 `noupdate="1"`，管理员填写的状态和备注在模块升级时保留。若后续
+改造成必须恢复固定基线的演示模型，应重新评估并测试 `noupdate`，不能机械沿用当前选择。
+
+备注只记录脱敏结论、问题现象和阻塞原因；不要复制生产截图、完整邮箱、客户数据、密钥、
+Token 或外部平台身份值。
+
+## 自动测试
+
+```bash
+./odoo-bin -d <测试数据库> \
+    --addons-path=addons,addons_odoocc \
+    -i ${test_module_name} \
+    --test-enable \
+    --test-tags=/${test_module_name} \
+    --stop-after-init
+```
+
+自动测试验证样例数据、四态记录、管理员 ACL、普通用户越权拒绝、菜单和动作。真实业务链路
+及外部系统连接由人工在隔离环境验收。
+
+## 权限与安全
+
+- 仅 `base.group_system` 获得清单模型 ACL 和菜单。
+- 验收模型没有凭据或外部身份字段。
+- 正式模块不得依赖 `${test_module_name}`。
+- 验收失败必须记录真实的脱敏结果，不得修改正式模块来伪造通过。
+
+## 许可证与联系
+
+- 作者：Odoo老赵
+- 官网：<https://odoocc.com>
+- 支持邮箱：<156277468@qq.com>
+- 许可证：[GNU Affero General Public License v3.0](../LICENSE)

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="node_root" model="occ.treegrid.test.node">
+        <field name="name">演示根节点</field>
+        <field name="sequence">10</field>
+        <field name="note">TreeGrid 演示树的根节点。</field>
+    </record>
+
+    <record id="node_child_a" model="occ.treegrid.test.node">
+        <field name="name">子节点 A</field>
+        <field name="parent_id" ref="node_root"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="node_grandchild_a1" model="occ.treegrid.test.node">
+        <field name="name">孙节点 A-1</field>
+        <field name="parent_id" ref="node_child_a"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="node_child_b" model="occ.treegrid.test.node">
+        <field name="name">子节点 B</field>
+        <field name="parent_id" ref="node_root"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="node_archived_child" model="occ.treegrid.test.node">
+        <field name="name">已归档子节点</field>
+        <field name="parent_id" ref="node_root"/>
+        <field name="sequence">30</field>
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

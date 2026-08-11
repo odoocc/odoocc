@@ -100,7 +100,7 @@ def _treegrid_read_specification(model, specification, parent_name, sequence_nam
 
 class OccTreegridMixin(models.AbstractModel):
     _name = "occ.treegrid.mixin"
-    _description = "OCC 层级列表混入"
+    _description = "OdooCC 层级列表混入"
 
     _occ_treegrid_parent_field = "parent_id"
     _occ_treegrid_sequence_field = "sequence"

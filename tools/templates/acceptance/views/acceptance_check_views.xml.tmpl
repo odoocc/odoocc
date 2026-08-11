@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_acceptance_check_search" model="ir.ui.view">
+        <field name="name">${acceptance_model}.search</field>
+        <field name="model">${acceptance_model}</field>
+        <field name="arch" type="xml">
+            <search string="${xml_title}验收清单">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="notes"/>
+                <filter name="pending" string="待验收" domain="[('status', '=', 'pending')]"/>
+                <filter name="passed" string="通过" domain="[('status', '=', 'passed')]"/>
+                <filter name="failed" string="失败" domain="[('status', '=', 'failed')]"/>
+                <filter name="blocked" string="阻塞" domain="[('status', '=', 'blocked')]"/>
+                <separator/>
+                <group>
+                    <filter name="group_by_category"
+                            string="分类"
+                            context="{'group_by': 'category'}"/>
+                    <filter name="group_by_status"
+                            string="状态"
+                            context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_acceptance_check_list" model="ir.ui.view">
+        <field name="name">${acceptance_model}.list</field>
+        <field name="model">${acceptance_model}</field>
+        <field name="arch" type="xml">
+            <list string="${xml_title}验收清单"
+                  default_order="sequence, id"
+                  decoration-muted="status == 'pending'"
+                  decoration-success="status == 'passed'"
+                  decoration-danger="status == 'failed'"
+                  decoration-warning="status == 'blocked'">
+                <field name="sequence" widget="handle"/>
+                <field name="category"/>
+                <field name="name"/>
+                <field name="status"
+                       widget="badge"
+                       decoration-muted="status == 'pending'"
+                       decoration-success="status == 'passed'"
+                       decoration-danger="status == 'failed'"
+                       decoration-warning="status == 'blocked'"/>
+                <field name="notes" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_acceptance_check_form" model="ir.ui.view">
+        <field name="name">${acceptance_model}.form</field>
+        <field name="model">${acceptance_model}</field>
+        <field name="arch" type="xml">
+            <form string="${xml_title}验收项">
+                <header>
+                    <field name="status"
+                           widget="statusbar"
+                           statusbar_visible="pending,passed,failed,blocked"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        只记录脱敏结论。请勿填写密码、AppSecret、Token、验证链接、完整个人身份标识或生产数据。
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="验收项"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="steps" string="验收步骤">
+                            <field name="steps" nolabel="1"/>
+                        </page>
+                        <page name="expected_result" string="预期结果">
+                            <field name="expected_result" nolabel="1"/>
+                        </page>
+                        <page name="notes" string="脱敏备注">
+                            <field name="notes" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_acceptance_check" model="ir.actions.act_window">
+        <field name="name">${xml_title}验收清单</field>
+        <field name="res_model">${acceptance_model}</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_acceptance_check_list"/>
+        <field name="search_view_id" ref="view_acceptance_check_search"/>
+        <field name="context">{'search_default_pending': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">创建一项 ${xml_title} 验收检查</p>
+            <p>只记录不含敏感数据的验收结论。</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_acceptance_root"
+              name="OdooCC ${xml_title}验收"
+              parent="base.menu_administration"
+              sequence="90"
+              groups="base.group_system"/>
+
+    <menuitem id="menu_acceptance_check"
+              name="验收清单"
+              parent="menu_acceptance_root"
+              action="action_acceptance_check"
+              sequence="10"
+              groups="base.group_system"/>
+</odoo>
+

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="check_installation" model="${acceptance_model}">
+        <field name="sequence">10</field>
+        <field name="name">确认正式模块与验收模块安装完成</field>
+        <field name="category">installation</field>
+        <field name="steps">在全新、无演示数据的 Odoo 19 测试数据库安装 ${module_name} 和 ${test_module_name}，检查安装日志并刷新应用列表。</field>
+        <field name="expected_result">两个模块均为已安装状态，没有缺失依赖、XML、ACL 或数据加载错误。</field>
+    </record>
+
+    <record id="check_configuration" model="${acceptance_model}">
+        <field name="sequence">20</field>
+        <field name="name">核对 ${xml_title} 配置与默认值</field>
+        <field name="category">configuration</field>
+        <field name="steps">按正式模块 README 在隔离环境完成配置，记录使用的角色和脱敏测试条件；不要把凭据或生产数据写入备注。</field>
+        <field name="expected_result">配置入口、默认值、必填校验和错误提示与 README 一致，未泄露敏感信息。</field>
+    </record>
+
+    <record id="check_core_flow" model="${acceptance_model}">
+        <field name="sequence">30</field>
+        <field name="name">执行 ${xml_title} 核心流程</field>
+        <field name="category">core_flow</field>
+        <field name="steps">使用最小脱敏样例执行正式模块定义的核心流程：${xml_summary}。同时执行至少一个失败或边界场景。</field>
+        <field name="expected_result">正常结果、失败回滚和用户提示符合正式模块公开契约，不产生重复或半完成数据。</field>
+    </record>
+
+    <record id="check_security" model="${acceptance_model}">
+        <field name="sequence">40</field>
+        <field name="name">验证权限与生产安全边界</field>
+        <field name="category">security</field>
+        <field name="steps">分别使用获授权用户和未授权用户验证菜单、模型、动作及外部入口；检查脱敏日志和敏感字段可见性。</field>
+        <field name="expected_result">最小授权用户可以完成职责内操作，其他用户被服务端拒绝，日志和页面不暴露凭据或生产数据。</field>
+    </record>
+</odoo>
+

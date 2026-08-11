@@ -1,4 +1,4 @@
-# OCC WeChat Login
+# OdooCC 微信扫码登录（`occ_wechat_login`）
 
 `occ_wechat_login` 为 Odoo 中文社区（[odoocc.com](https://odoocc.com)）提供微信扫码登录、社区用户名、邮箱验证及密码登录能力。
 
@@ -39,15 +39,15 @@
 - 用户收到凭据邮件后应尽快使用“邮箱 + 初始密码”登录并修改密码；也可以继续使用微信扫码登录。
 - 新账号验证与首次凭据邮件发送处于同一事务保护范围内；邮件发送失败时不会留下已激活但用户未收到密码的半完成状态。
 
-## 安装与微信配置
+## 安装、升级与微信配置
 
-1. 将 `occ_wechat_login` 放入 Odoo 的 addons 加载路径，更新应用列表并安装 `OCC WeChat Login`；模块不依赖额外的 `occ` 基础模块。
-2. 将系统参数 `web.base.url` 设置为 `https://odoocc.com`，并将 `web.base.url.freeze` 设置为 `True`。
-3. 在微信开放平台创建并审核“网站应用”，授权回调域配置为 `odoocc.com`。
-4. 在“设置 → 常规设置 → 集成 → OCC 微信登录”选择“新建用户类型”，填写 AppID 和 AppSecret，并核对回调地址：
+1. 将本仓库目录 `addons_odoocc` 加入 Odoo 的 `addons_path`，更新应用列表并安装“OdooCC 微信扫码登录”；模块不依赖额外的 `occ` 基础模块。
+2. 将系统参数 `web.base.url` 设置为部署实例真实、可从公网访问的 HTTPS 根地址，并将 `web.base.url.freeze` 设置为 `True`。
+3. 在微信开放平台创建并审核“网站应用”，将授权回调域配置为该部署实例的域名。
+4. 在“设置 → 常规设置 → 集成 → OdooCC 微信登录”选择“新建用户类型”，填写 AppID 和 AppSecret，并核对回调地址：
 
    ```text
-   https://odoocc.com/occ/wechat/callback
+   https://<你的 Odoo 域名>/occ/wechat/callback
    ```
 
 5. 完成下面的 126 SMTP 配置并测试发信，最后再启用微信登录。
@@ -57,6 +57,22 @@
 - **门户用户**：首次扫码授予 `base.group_portal`，邮箱验证后仍为门户用户。适合只需要网站/门户访问、不希望开放 Odoo 后台的部署。
 - **内部用户**：首次扫码授予 `base.group_user`，邮箱验证后仍为内部用户。此模式与旧版本行为兼容。
 - 缺失或无法识别的配置值会回退为“内部用户”。邮箱验证只确认邮箱、社区用户名和登录凭据，不添加、移除或切换门户/内部用户组。
+
+命令行安装或升级示例：
+
+```bash
+./odoo-bin -d <数据库名> --addons-path=addons,addons_odoocc \
+    -i occ_wechat_login --stop-after-init
+./odoo-bin -d <数据库名> --addons-path=addons,addons_odoocc \
+    -u occ_wechat_login --stop-after-init
+```
+
+升级前应备份数据库，并先在测试环境验证扫码、邮件和原有账号登录。卸载会移除模块定义的
+视图、模板和字段；如需保留微信身份绑定及验证状态，应先按部署方的数据保留策略导出相关
+用户数据，不要直接在生产环境试卸载。
+
+版本 `19.0.4.0.5` 会将仍使用默认名称的两个邮件模板从旧的 `OCC:` 前缀迁移为 `OdooCC:`；
+已经由部署方自定义过名称的模板不会被覆盖。
 
 ## 126 发件服务器配置
 
@@ -110,3 +126,32 @@ Odoo Chinese Community <odoocc@126.com>
 - 验证邮件 60 秒冷却及每小时 5 封限制；首次密码复杂度、哈希保存、邮件失败回滚和重复验证不重置密码。
 - 门户/内部两种新用户配置、邮箱验证前后用户类型保持不变、未验证用户访问 `/odoo` 的引导，以及邮箱变更后的重新验证。
 - 上线前使用已审核的网站应用和真实 126 邮箱完成真机扫码、邮件送达、邮箱密码登录、改密、退出及再次登录测试。
+
+服务端自动测试不会连接真实微信开放平台，而是验证 HTTP、安全、模型和日志脱敏契约：
+
+```bash
+./odoo-bin -d <测试数据库> --addons-path=addons,addons_odoocc \
+    -i occ_wechat_login --test-enable --stop-after-init \
+    --test-tags=/occ_wechat_login
+```
+
+测试数据库必须与生产数据库隔离。仓库中的 `occ_wechat_login_test` 提供可见的人工验收清单
+和配置快捷入口，适合开发、培训及上线验收，不建议安装到生产数据库。该验收模块不会保存
+AppID、AppSecret 或 UnionID，也不会提供模拟登录或绕过微信认证的后门。
+
+## 许可证与联系
+
+- 许可证：[GNU Affero General Public License v3.0](../LICENSE)
+- 官网：<https://odoocc.com>
+- 作者：Odoo老赵
+- 支持邮箱：<156277468@qq.com>
+
+## English summary
+
+`occ_wechat_login` is an AGPL-3 authentication extension for Odoo 19. It embeds
+WeChat QRConnect on the login page, binds accounts by UnionID, verifies a unique
+community username and email login, and preserves the configured portal or internal
+user type. Production deployment requires HTTPS, an approved WeChat Open Platform
+website application, correctly configured outbound email, and a full real-device
+acceptance test. The companion `occ_wechat_login_test` module contains only a manual
+acceptance checklist; it never bypasses real WeChat authentication.

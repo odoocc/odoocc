@@ -1,0 +1,271 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - "19.0"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ODOO_BRANCH: "19.0"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  static-checks:
+    name: Static checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out OdooCC
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check repository and module standards
+        shell: bash
+        run: python tools/check_modules.py check
+
+      - name: Test repository tooling
+        shell: bash
+        run: python -m unittest discover -s tools/tests -p "test_*.py" -v
+
+  odoo-tests:
+    name: Odoo 19 / PostgreSQL 16
+    needs: static-checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U odoo -d postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: "5432"
+      PGUSER: odoo
+      PGPASSWORD: odoo
+
+    steps:
+      - name: Check out OdooCC
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Check out Odoo 19
+        uses: actions/checkout@v4
+        with:
+          repository: odoo/odoo
+          ref: ${{ env.ODOO_BRANCH }}
+          path: .odoo
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: .odoo/requirements.txt
+
+      - name: Discover OdooCC modules and test tags
+        shell: bash
+        run: |
+          modules="$(python tools/check_modules.py list --format csv)"
+          server_tags="$(python tools/check_modules.py list --format test-tags)"
+          hoot_modules="$(python tools/check_modules.py list --format hoot-modules)"
+          hoot_tags="$(python tools/check_modules.py list --format hoot-tags)"
+          if [[ -z "$modules" || -z "$server_tags" ]]; then
+            echo "No installable OdooCC modules were discovered." >&2
+            exit 1
+          fi
+          {
+            echo "OCC_MODULES=$modules"
+            echo "SERVER_TEST_TAGS=$server_tags"
+            echo "HOOT_MODULES=$hoot_modules"
+            echo "HOOT_TEST_TAGS=$hoot_tags"
+          } >> "$GITHUB_ENV"
+          echo "Modules: $modules"
+          echo "Server test tags: $server_tags"
+          echo "Hoot modules: ${hoot_modules:-none}"
+
+      - name: Install system dependencies
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends \
+            libffi-dev \
+            libjpeg-dev \
+            libldap2-dev \
+            libpq-dev \
+            libsasl2-dev \
+            libssl-dev \
+            libxml2-dev \
+            libxslt1-dev \
+            postgresql-client \
+            zlib1g-dev
+
+      - name: Install Odoo Python dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -r .odoo/requirements.txt
+
+      - name: Verify PostgreSQL and browser
+        shell: bash
+        run: |
+          pg_isready --host="$PGHOST" --port="$PGPORT" --username="$PGUSER"
+          google-chrome --version
+
+      - name: Install each discovered module independently
+        shell: bash
+        run: |
+          IFS=',' read -r -a modules <<< "$OCC_MODULES"
+          index=0
+          for module in "${modules[@]}"; do
+            database="occ_ci_single_$index"
+            echo "::group::Independent install $module"
+            createdb "$database"
+            python .odoo/odoo-bin \
+              --database="$database" \
+              --db_host="$PGHOST" \
+              --db_port="$PGPORT" \
+              --db_user="$PGUSER" \
+              --db_password="$PGPASSWORD" \
+              --addons-path=".odoo/addons,$GITHUB_WORKSPACE" \
+              --init="$module" \
+              --without-demo=true \
+              --workers=0 \
+              --max-cron-threads=0 \
+              --stop-after-init \
+              --log-level=warn
+            dropdb "$database"
+            echo "::endgroup::"
+            index=$((index + 1))
+          done
+
+      - name: Generate and install scaffold smoke modules
+        shell: bash
+        run: |
+          scaffold_root="$RUNNER_TEMP/odoocc-scaffold-smoke"
+          mkdir --parents "$scaffold_root"
+          python tools/scaffold_module.py create occ_scaffold_smoke \
+            --root "$scaffold_root" \
+            --title '脚手架"冒烟"验收' \
+            --summary '验证正式模块与验收模块模板可安装' \
+            --summary-en 'Verify that both generated module templates install.' \
+            --description '仅用于 CI 验证模板的 Odoo 19 语义、ACL 和菜单契约。' \
+            --demo-category developer_tools \
+            --demo-keyword '脚手架' \
+            --demo-keyword '冒烟验收' \
+            --depends base
+          createdb occ_ci_scaffold
+          python .odoo/odoo-bin \
+            --database=occ_ci_scaffold \
+            --db_host="$PGHOST" \
+            --db_port="$PGPORT" \
+            --db_user="$PGUSER" \
+            --db_password="$PGPASSWORD" \
+            --addons-path=".odoo/addons,$GITHUB_WORKSPACE,$scaffold_root" \
+            --init=occ_scaffold_smoke_test \
+            --without-demo=true \
+            --test-enable \
+            --test-tags=/occ_scaffold_smoke,/occ_scaffold_smoke_test \
+            --workers=0 \
+            --max-cron-threads=0 \
+            --stop-after-init \
+            --log-level=test
+          dropdb occ_ci_scaffold
+
+      - name: Create clean test database
+        shell: bash
+        run: createdb occ_ci
+
+      - name: Install all discovered modules
+        shell: bash
+        run: |
+          python .odoo/odoo-bin \
+            --database=occ_ci \
+            --db_host="$PGHOST" \
+            --db_port="$PGPORT" \
+            --db_user="$PGUSER" \
+            --db_password="$PGPASSWORD" \
+            --addons-path=".odoo/addons,$GITHUB_WORKSPACE" \
+            --init="$OCC_MODULES" \
+            --without-demo=true \
+            --workers=0 \
+            --max-cron-threads=0 \
+            --stop-after-init \
+            --log-level=info
+
+      - name: Run server-side tests
+        shell: bash
+        run: |
+          python .odoo/odoo-bin \
+            --database=occ_ci \
+            --db_host="$PGHOST" \
+            --db_port="$PGPORT" \
+            --db_user="$PGUSER" \
+            --db_password="$PGPASSWORD" \
+            --addons-path=".odoo/addons,$GITHUB_WORKSPACE" \
+            --update="$OCC_MODULES" \
+            --test-enable \
+            --test-tags="$SERVER_TEST_TAGS" \
+            --workers=0 \
+            --max-cron-threads=0 \
+            --stop-after-init \
+            --log-level=test
+
+      - name: Run discovered Hoot tests
+        shell: bash
+        env:
+          ODOO_BROWSER_BIN: /usr/bin/google-chrome
+        run: |
+          if [[ -z "${HOOT_MODULES:-}" ]]; then
+            echo "No Hoot-enabled OdooCC module was discovered."
+            exit 0
+          fi
+          IFS=',' read -r -a modules <<< "$HOOT_MODULES"
+          for module in "${modules[@]}"; do
+            echo "::group::Hoot $module"
+            python .odoo/odoo-bin \
+              --database=occ_ci \
+              --db_host="$PGHOST" \
+              --db_port="$PGPORT" \
+              --db_user="$PGUSER" \
+              --db_password="$PGPASSWORD" \
+              --addons-path=".odoo/addons,$GITHUB_WORKSPACE" \
+              --update="web,$module" \
+              --test-enable \
+              --test-tags="/web:WebSuite.test_unit_desktop[@$module]" \
+              --workers=0 \
+              --max-cron-threads=0 \
+              --stop-after-init \
+              --log-level=test
+            echo "::endgroup::"
+          done

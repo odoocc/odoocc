@@ -118,7 +118,7 @@ def _masked_email(email):
 
 
 def _use_onboarding_language():
-    """Render OCC account activation pages in Simplified Chinese.
+    """Render OdooCC account activation pages in Simplified Chinese.
 
     ``get_lang`` safely falls back to an installed request/company language
     when ``zh_CN`` is unavailable, so the module remains installable on a
@@ -374,21 +374,21 @@ class OccWechatController(http.Controller):
                 303,
             )
             _logger.info(
-                "OCC WeChat login succeeded for user id %s (%s)",
+                "OdooCC WeChat login succeeded for user id %s (%s)",
                 user.id,
                 "created" if created else "existing",
             )
             return _with_private_headers(response)
         except WeChatLoginError as error:
-            _logger.warning("OCC WeChat API login failed with category %s", error.code)
+            _logger.warning("OdooCC WeChat API login failed with category %s", error.code)
             return self._login_error(error.code)
         except AccessDenied:
             request.session.pop(WECHAT_LOGIN_GRANT_SESSION_KEY, None)
-            _logger.warning("OCC WeChat login denied")
+            _logger.warning("OdooCC WeChat login denied")
             return self._login_error("account_disabled")
         except Exception:
             request.session.pop(WECHAT_LOGIN_GRANT_SESSION_KEY, None)
-            _logger.exception("Unexpected OCC WeChat login failure")
+            _logger.exception("Unexpected OdooCC WeChat login failure")
             return self._login_error("login_failed")
 
     @http.route(
@@ -449,7 +449,7 @@ class OccWechatController(http.Controller):
             except (ValidationError, UserError, MailDeliveryException) as exception:
                 error = exception.args[0] if exception.args else _("Unable to send the verification email.")
             except Exception:
-                _logger.exception("Unexpected OCC email verification send failure")
+                _logger.exception("Unexpected OdooCC email verification send failure")
                 error = _("Unable to send the verification email. Please try again later.")
 
         return self._render(
@@ -557,7 +557,7 @@ class OccWechatController(http.Controller):
                 status=400,
             )
         except Exception:
-            _logger.exception("Unexpected OCC email verification confirmation failure")
+            _logger.exception("Unexpected OdooCC email verification confirmation failure")
             return self._render(
                 "occ_wechat_login.verify_result",
                 {

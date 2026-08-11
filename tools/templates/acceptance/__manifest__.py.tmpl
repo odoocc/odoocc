@@ -1,0 +1,28 @@
+{
+    "name": ${test_display_name_literal},
+    "version": "${version}",
+    "category": "Tools",
+    "summary": ${test_summary_literal},
+    "description": ${test_description_literal},
+    "author": "Odoo老赵",
+    "website": "https://odoocc.com",
+    "support": "156277468@qq.com",
+    "license": "AGPL-3",
+    "depends": ${test_dependencies_literal},
+    "data": [
+        "security/ir.model.access.csv",
+        "data/acceptance_checklist_data.xml",
+        "views/acceptance_check_views.xml",
+    ],
+    "odoocc_demo": {
+        "schema_version": ${demo_schema_version},
+        "category": ${demo_category_literal},
+        "sequence": ${demo_sequence},
+        "menu_xmlid": ${demo_menu_xmlid_literal},
+        "entry_menu_xmlid": ${demo_entry_menu_xmlid_literal},
+        "keywords": ${demo_keywords_literal},
+    },
+    "application": False,
+    "installable": True,
+    "auto_install": False,
+}

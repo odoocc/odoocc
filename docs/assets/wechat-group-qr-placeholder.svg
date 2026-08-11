@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="480" viewBox="0 0 480 480" role="img" aria-labelledby="title desc">
+  <title id="title">OdooCC 微信交流群二维码占位图</title>
+  <desc id="desc">这不是可扫描二维码，发布有效群二维码前用于占位。</desc>
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#d8e9df" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="480" height="480" rx="32" fill="#f4fbf6"/>
+  <rect x="16" y="16" width="448" height="448" rx="24" fill="url(#grid)" stroke="#20a162" stroke-width="4"/>
+  <g fill="#20a162">
+    <path d="M48 48h112v112H48zm24 24v64h64V72z"/>
+    <path d="M320 48h112v112H320zm24 24v64h64V72z"/>
+    <path d="M48 320h112v112H48zm24 24v64h64v-64z"/>
+    <rect x="344" y="344" width="40" height="40"/>
+    <rect x="392" y="320" width="40" height="64"/>
+    <rect x="320" y="392" width="64" height="40"/>
+    <rect x="400" y="400" width="32" height="32"/>
+  </g>
+  <rect x="112" y="184" width="256" height="112" rx="18" fill="#ffffff" stroke="#20a162" stroke-width="3"/>
+  <text x="240" y="224" text-anchor="middle" fill="#173c2a" font-family="Arial, 'Noto Sans SC', sans-serif" font-size="24" font-weight="700">OdooCC 微信交流群</text>
+  <text x="240" y="258" text-anchor="middle" fill="#20a162" font-family="Arial, 'Noto Sans SC', sans-serif" font-size="20" font-weight="700">二维码占位图</text>
+  <text x="240" y="283" text-anchor="middle" fill="#5c7266" font-family="Arial, 'Noto Sans SC', sans-serif" font-size="14">PLACEHOLDER · 当前不可扫码</text>
+  <text x="240" y="458" text-anchor="middle" fill="#5c7266" font-family="Arial, 'Noto Sans SC', sans-serif" font-size="14">发布前请替换为有效且已获授权的群二维码</text>
+</svg>
