@@ -161,10 +161,9 @@ CI 内的硬编码模块列表。
 
 ## 在线演示
 
-- Odoo 19 演示环境：<https://demo19c.odoocc.com>
-- 规划中的统一演示入口：`https://demo.odoocc.com`（证书和别名配置完成后启用）
-- 公开用户名：`odoocc`
-- 公开密码：`odoocc666`
+- Odoo 19 演示环境：<https://odoocc.com/odoo/odoocc-demo>
+- 需要微信扫码登录
+
 
 在 OdooCC 服务器上，部署侧的 `occ_odoocc_demo` 可按上述 Manifest 协议统一组织已安装
 `_test` 的菜单。聚合只改变导航层级，不改变模块依赖、模型 ACL 和菜单用户组；
@@ -192,12 +191,36 @@ CI 内的硬编码模块列表。
 - 支持邮箱：<156277468@qq.com>
 - 作者：Odoo老赵
 
-### 微信交流群
+### 微信社区
 
-当前仓库提供的是二维码占位图，维护者替换为有效群二维码后才能扫码加入。二维码过期时，请
-通过支持邮箱联系维护者。
+<table>
+  <thead>
+    <tr>
+      <th align="center" width="50%">微信公众号</th>
+      <th align="center" width="50%">微信交流群</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">
+        <a href="docs/assets/gongzhonghao.png">
+          <img src="docs/assets/gongzhonghao.png" alt="和光同源 Odoo 中文社区公众号二维码" width="170">
+        </a>
+      </td>
+      <td align="center">
+        <a href="docs/assets/weixinqun.png">
+          <img src="docs/assets/weixinqun.png" alt="OdooCC 微信交流群二维码" width="170">
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">获取 Odoo 中文教程、模块解读与项目动态</td>
+      <td align="center">交流 Odoo 开发、实施经验与中小企业数字化实践</td>
+    </tr>
+  </tbody>
+</table>
 
-<img src="docs/assets/wechat-group-qr-placeholder.svg" alt="OdooCC 微信交流群二维码占位图" width="240">
+> 点击二维码可以查看原图。交流群二维码可能定期更新；如无法加入，请通过支持邮箱联系维护者。
 
 ## English summary
 
