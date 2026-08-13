@@ -3,9 +3,9 @@
 [![CI](https://github.com/odoocc/odoocc/actions/workflows/ci.yml/badge.svg)](https://github.com/odoocc/odoocc/actions/workflows/ci.yml)
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 
-OdooCC 是一组面向 **Odoo 19.0** 的开源扩展，当前聚焦层级列表（TreeGrid）与微信扫码
-登录。正式模块可用于经过评估的生产部署；同仓库的两个 `*_test` 模块只用于开发、演示、
-培训和验收，不应安装到生产数据库。
+OdooCC 是一组面向 **Odoo 19.0** 的开源扩展，当前聚焦层级列表（TreeGrid）、微信扫码
+登录和网站中国生态增强。正式模块可用于经过评估的生产部署；同仓库的 `*_test` 模块只用于
+开发、演示、培训和验收，不应安装到生产数据库。
 
 > **以 Odoo 为根，以 AI 为光，让中小企业拥有自己的智能经营系统。**
 
@@ -17,6 +17,8 @@ OdooCC 是一组面向 **Odoo 19.0** 的开源扩展，当前聚焦层级列表�
 | `occ_treegrid_test` | `19.0.1.0.1` | 演示/验收模块 | `occ_treegrid` | 提供示例模型、样例数据、菜单和回归测试，仅用于非生产环境 |
 | `occ_wechat_login` | `19.0.4.0.5` | 正式模块 | `web`、`mail`、`base_setup` | 提供微信 QRConnect 扫码登录、UnionID 账号绑定、社区用户名与邮箱验证 |
 | `occ_wechat_login_test` | `19.0.1.0.1` | 验收辅助模块 | `occ_wechat_login` | 提供管理员人工验收清单，不模拟认证、不保存微信身份或凭据，仅用于非生产环境 |
+| `occ_website_cn` | `19.0.1.0.0` | 正式模块 | `website` | 增加B站视频、国内分享和多网站 ICP/公安备案，可用于经过验收的生产网站 |
+| `occ_website_cn_test` | `19.0.1.0.0` | 验收辅助模块 | `occ_website_cn` | 提供三项网站增强能力的管理员脱敏验收清单，仅用于非生产环境 |
 
 详细功能、配置契约与安全边界请阅读：
 
@@ -24,6 +26,8 @@ OdooCC 是一组面向 **Odoo 19.0** 的开源扩展，当前聚焦层级列表�
 - [`occ_treegrid_test/README.md`](occ_treegrid_test/README.md)
 - [`occ_wechat_login/README.md`](occ_wechat_login/README.md)
 - [`occ_wechat_login_test/README.md`](occ_wechat_login_test/README.md)
+- [`occ_website_cn/README.md`](occ_website_cn/README.md)
+- [`occ_website_cn_test/README.md`](occ_website_cn_test/README.md)
 
 ## 兼容性
 
@@ -44,24 +48,25 @@ git clone https://github.com/odoocc/odoocc.git addons_odoocc
 
 ./odoo-bin -d <数据库名> \
     --addons-path=addons,addons_odoocc \
-    -i occ_treegrid,occ_wechat_login \
+    -i occ_treegrid,occ_wechat_login,occ_website_cn \
     --stop-after-init
 ```
 
 也可以把本仓库放到其他目录，但必须将该目录加入 `addons_path`。随后更新应用列表，并安装
 所需正式模块。`occ_treegrid` 本身不提供业务菜单，需要业务模型和列表视图显式接入；
-`occ_wechat_login` 默认关闭，完成微信开放平台、基础 URL、邮件服务器和用户类型配置后再启用。
+`occ_wechat_login` 默认关闭，完成微信开放平台、基础 URL、邮件服务器和用户类型配置后再启用；
+`occ_website_cn` 上线前应配置备案信息，并验收可选 Cookie 与国内分享在目标浏览器中的行为。
 
 开发或验收环境如需示例数据，可以额外安装测试模块：
 
 ```bash
 ./odoo-bin -d <非生产数据库> \
     --addons-path=addons,addons_odoocc \
-    -i occ_treegrid_test,occ_wechat_login_test \
+    -i occ_treegrid_test,occ_wechat_login_test,occ_website_cn_test \
     --stop-after-init
 ```
 
-> `occ_treegrid_test` 与 `occ_wechat_login_test` 不属于生产依赖。不要在生产数据库安装，也不要
+> 所有 `_test` 模块均不属于生产依赖。不要在生产数据库安装，也不要
 > 将其中的验收记录或样例数据复制到生产环境。
 
 ## 升级
@@ -73,12 +78,13 @@ git pull --ff-only
 
 ./odoo-bin -d <数据库名> \
     --addons-path=addons,addons_odoocc \
-    -u occ_treegrid,occ_wechat_login \
+    -u occ_treegrid,occ_wechat_login,occ_website_cn \
     --stop-after-init
 ```
 
 若业务模块依赖 `occ_treegrid`，应在同一次验证中升级并回归这些业务模块。升级
-`occ_wechat_login` 后，应复核登录页、微信回调域、邮件投递、既有账号绑定与停用用户行为。
+`occ_wechat_login` 后，应复核登录页、微信回调域、邮件投递、既有账号绑定与停用用户行为；
+升级 `occ_website_cn` 后，应复核B站媒体、可选 Cookie、分享入口和所有网站的备案 footer。
 
 ## 测试
 
@@ -227,12 +233,13 @@ CI 内的硬编码模块列表。
 OdooCC provides AGPL-3.0 extensions for Odoo 19. `occ_treegrid` adds an explicitly
 configured hierarchical list view with ancestor-aware results and safe sibling
 resequencing. `occ_wechat_login` implements WeChat QRConnect login, UnionID account
-binding, community usernames, and email verification.
+binding, community usernames, and email verification. `occ_website_cn` adds Bilibili
+media, China-focused sharing, and per-website ICP/public-security filing information.
 
-The companion modules `occ_treegrid_test` and `occ_wechat_login_test` are for
-development, demonstrations, and acceptance testing only; do not install them in a
-production database. See the module READMEs for configuration details, and use private
-email reporting for security vulnerabilities as described in [`SECURITY.md`](SECURITY.md).
+The companion `*_test` modules are for development, demonstrations, and acceptance
+testing only; do not install them in a production database. See the module READMEs for
+configuration details, and use private email reporting for security vulnerabilities as
+described in [`SECURITY.md`](SECURITY.md).
 
 ## 许可证
 

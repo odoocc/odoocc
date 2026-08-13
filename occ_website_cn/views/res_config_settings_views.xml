@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_config_settings_occ_website_cn_filing" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.occ.website.cn.filing</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='website_info_settings']" position="after">
+                <block id="occ_website_cn_filing_settings"
+                       title="中国大陆网站备案"
+                       invisible="not website_id"
+                       groups="base.group_system">
+                    <setting id="occ_website_cn_icp_filing_setting"
+                             string="ICP备案"
+                             help="按当前网站配置页脚展示的 ICP 备案号和跳转地址。">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="occ_icp_filing_text"
+                                       string="展示文本"
+                                       class="col-lg-3 o_light_label"/>
+                                <field name="occ_icp_filing_text"
+                                       placeholder="例如：鲁ICP备XXXXXXXX号"/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="occ_icp_filing_url"
+                                       string="链接"
+                                       class="col-lg-3 o_light_label"/>
+                                <field name="occ_icp_filing_url"
+                                       widget="url"
+                                       placeholder="https://beian.miit.gov.cn/"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="occ_website_cn_public_security_filing_setting"
+                             string="公安备案"
+                             help="按当前网站配置页脚展示的公安机关互联网备案号和跳转地址。">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="occ_public_security_filing_text"
+                                       string="展示文本"
+                                       class="col-lg-3 o_light_label"/>
+                                <field name="occ_public_security_filing_text"
+                                       placeholder="例如：鲁公网安备 XXXXXXXXXXXXXX号"/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="occ_public_security_filing_url"
+                                       string="链接"
+                                       class="col-lg-3 o_light_label"/>
+                                <field name="occ_public_security_filing_url"
+                                       widget="url"
+                                       placeholder="https://beian.mps.gov.cn/"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <div class="alert alert-info mt16" role="alert">
+                        备案信息按网站独立保存。展示文本为空时不显示对应备案项；
+                        若某个页面隐藏整个页脚，备案条也会在该页面隐藏。
+                        只隐藏 Copyright 不影响备案条。
+                    </div>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

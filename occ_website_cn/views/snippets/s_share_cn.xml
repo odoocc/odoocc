@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_share_cn" name="国内分享">
+    <div class="s_share_cn text-start o_no_link_popover">
+        <h4 class="s_share_cn_title d-none">分享到国内平台</h4>
+        <div class="s_share_cn_actions o_not_editable" contenteditable="false"
+             role="group" aria-label="国内社交分享">
+            <button type="button" class="s_share_cn_action s_share_cn_wechat" data-platform="wechat" aria-label="分享到微信" title="微信">
+                <i class="fa fa-weixin fa-2x" aria-hidden="true"/>
+            </button>
+            <button type="button" class="s_share_cn_action s_share_cn_qq" data-platform="qq" aria-label="分享到QQ好友" title="QQ好友">
+                <i class="fa fa-qq fa-2x" aria-hidden="true"/>
+            </button>
+            <button type="button" class="s_share_cn_action s_share_cn_qzone" data-platform="qzone" aria-label="分享到QQ空间" title="QQ空间">
+                <i class="fa fa-star fa-2x" aria-hidden="true"/>
+            </button>
+            <button type="button" class="s_share_cn_action s_share_cn_weibo" data-platform="weibo" aria-label="分享到微博" title="微博">
+                <i class="fa fa-weibo fa-2x" aria-hidden="true"/>
+            </button>
+            <button type="button" class="s_share_cn_action s_share_cn_copy" data-platform="copy" aria-label="复制当前页面链接" title="复制链接">
+                <i class="fa fa-link fa-2x" aria-hidden="true"/>
+            </button>
+        </div>
+        <div class="modal s_share_cn_dialog" hidden="hidden" role="dialog" aria-modal="true"
+             aria-label="分享" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title s_share_cn_dialog_title"/>
+                        <button type="button" class="btn-close s_share_cn_dialog_close" aria-label="关闭"/>
+                    </div>
+                    <div class="modal-body s_share_cn_dialog_body"/>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-primary s_share_cn_dialog_confirm"
+                                hidden="hidden">继续分享</button>
+                        <button type="button"
+                                class="btn btn-secondary s_share_cn_dialog_cancel s_share_cn_dialog_close">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="snippets" inherit_id="website.snippets" name="国内分享区块">
+    <xpath expr="//snippets[@id='snippet_structure']" position="inside">
+        <t t-snippet="occ_website_cn.s_share_cn" string="国内分享" group="social"
+            t-thumbnail="/occ_website_cn/static/src/img/snippets_thumbs/s_share_cn.svg">
+            <keywords>微信, QQ, QQ空间, 微博, 分享, 复制链接, China, share</keywords>
+        </t>
+    </xpath>
+    <xpath expr="//snippets[@id='snippet_content']" position="inside">
+        <t t-snippet="occ_website_cn.s_share_cn" string="国内分享"
+            t-thumbnail="/occ_website_cn/static/src/img/snippets_thumbs/s_share_cn.svg"/>
+    </xpath>
+</template>
+
+</odoo>

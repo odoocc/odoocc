@@ -1,0 +1,106 @@
+.s_share_cn {
+    user-select: none;
+
+    > * {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .s_share_cn_title {
+        margin: 0 .4rem 0 0;
+    }
+
+    .s_share_cn_actions {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: .4rem;
+    }
+
+    .s_share_cn_action {
+        align-items: center;
+        background: transparent;
+        border: 0;
+        border-radius: 50%;
+        color: inherit;
+        display: inline-flex;
+        height: 2.5rem;
+        justify-content: center;
+        padding: 0;
+        transition: color .15s ease-in-out, transform .15s ease-in-out;
+        width: 2.5rem;
+
+        &:hover,
+        &:focus-visible {
+            color: var(--primary, #714b67);
+            transform: translateY(-1px);
+        }
+
+        &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+        }
+    }
+
+    .s_share_cn_wechat {
+        color: #07c160;
+    }
+
+    .s_share_cn_qq,
+    .s_share_cn_qzone {
+        color: #12b7f5;
+    }
+
+    .s_share_cn_weibo {
+        color: #e6162d;
+    }
+
+    .s_share_cn_copy {
+        color: #495057;
+    }
+
+    .s_share_cn_dialog {
+        background: rgba(0, 0, 0, .5);
+        display: block;
+        inset: 0;
+        overflow-y: auto;
+        padding: 1rem;
+        position: fixed;
+        user-select: auto;
+        z-index: 1055;
+
+        &[hidden] {
+            display: none !important;
+        }
+
+        .modal-dialog {
+            margin: min(12vh, 6rem) auto;
+            max-width: 26rem;
+        }
+    }
+
+    .s_share_cn_qr {
+        margin-inline: auto;
+        max-width: 16rem;
+        width: 100%;
+
+        svg {
+            display: block;
+            height: auto;
+            width: 100%;
+        }
+    }
+
+    .s_share_cn_copy_fallback {
+        user-select: text;
+    }
+}
+
+.editor_enable .s_share_cn {
+    .s_share_cn_action {
+        pointer-events: none;
+    }
+
+    .s_share_cn_dialog {
+        display: none !important;
+    }
+}

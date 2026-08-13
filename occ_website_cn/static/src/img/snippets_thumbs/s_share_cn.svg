@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 90" role="img" aria-labelledby="title">
+  <title id="title">国内分享</title>
+  <rect width="140" height="90" rx="8" fill="#f4f5f7"/>
+  <circle cx="28" cy="45" r="16" fill="#07c160"/>
+  <circle cx="70" cy="45" r="16" fill="#12b7f5"/>
+  <circle cx="112" cy="45" r="16" fill="#e6162d"/>
+  <path d="M20 41c0-5 4-9 10-9s10 4 10 9-4 9-10 9c-1 0-3 0-4-1l-5 3 1-5c-1-2-2-4-2-6Z" fill="#fff"/>
+  <path d="M62 50c1-9 2-14 8-14s7 5 8 14c-2 3-4 5-8 5s-6-2-8-5Z" fill="#fff"/>
+  <path d="M102 48c0-6 5-11 12-11 5 0 9 3 9 8 0 6-6 10-13 10-5 0-8-3-8-7Z" fill="#fff"/>
+</svg>
+

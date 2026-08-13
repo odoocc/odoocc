@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="acceptance_demo" name="网站中国生态增强验收演示页">
+        <t t-call="website.layout">
+            <t t-set="additional_title">网站中国生态增强验收演示</t>
+            <main id="wrap">
+                <section class="py-5" data-name="验收说明">
+                    <div class="container">
+                        <h1>网站中国生态增强 1.0 验收演示</h1>
+                        <p class="lead">
+                            本页只包含公开、固定、脱敏的演示内容，用于验证B站视频、国内分享与网站备案。
+                        </p>
+                        <div class="alert alert-warning" role="alert">
+                            请勿在本页查询参数、验收备注或浏览器工具中录入密码、Token、客户数据或生产链接。
+                        </div>
+                    </div>
+                </section>
+
+                <section class="py-4 bg-light" data-name="B站视频演示">
+                    <div class="container">
+                        <h2>B站视频</h2>
+                        <p>
+                            下方是固定 BV 标识的安全播放器容器。启用 Odoo 可选 Cookie 阻断时，
+                            发布展示应在同意前保持零B站外联。
+                        </p>
+                        <div class="s_video media_iframe_video ratio ratio-16x9"
+                             data-oe-expression="https://player.bilibili.com/player.html?bvid=BV1xx411c7mD&amp;page=1&amp;autoplay=0"
+                             contenteditable="false">
+                            <div class="css_editable_mode_display"/>
+                            <div class="media_iframe_video_size" contenteditable="false"/>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="py-5" data-name="国内分享演示">
+                    <div class="container">
+                        <h2>国内分享</h2>
+                        <p>测试微信、QQ好友、QQ空间、微博、复制链接，以及敏感参数确认和复制回退。</p>
+                        <t t-call="occ_website_cn.s_share_cn"/>
+                    </div>
+                </section>
+
+                <section class="py-4 bg-light" data-name="备案演示说明">
+                    <div class="container">
+                        <h2>ICP 与公安备案</h2>
+                        <p class="mb-0">
+                            备案条读取当前网站设置并出现在本页整体 footer 内。请从验收菜单进入网站设置，
+                            使用脱敏文本验证单项、双项、空值、Copyright 隐藏与整个 footer 隐藏。
+                        </p>
+                    </div>
+                </section>
+            </main>
+        </t>
+    </template>
+</odoo>

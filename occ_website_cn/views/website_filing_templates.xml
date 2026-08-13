@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website_filing" name="OdooCC Website Filing">
+        <t t-set="occ_icp_filing_text"
+           t-value="website.occ_icp_filing_text and website.occ_icp_filing_text.strip()"/>
+        <t t-set="occ_public_security_filing_text"
+           t-value="website.occ_public_security_filing_text and website.occ_public_security_filing_text.strip()"/>
+        <div t-if="occ_icp_filing_text or occ_public_security_filing_text"
+             class="o_occ_website_filing o_not_editable o_colored_level o_cc py-2"
+             data-name="Website Filing"
+             contenteditable="false"
+             aria-label="网站备案信息">
+            <div class="container text-center small text-muted">
+                <span t-if="occ_icp_filing_text" class="o_occ_icp_filing">
+                    <a t-if="website.occ_icp_filing_url"
+                       t-att-href="website.occ_icp_filing_url"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       t-out="occ_icp_filing_text"/>
+                    <span t-else="" t-out="occ_icp_filing_text"/>
+                </span>
+                <span t-if="occ_icp_filing_text and occ_public_security_filing_text"
+                      class="mx-2"
+                      aria-hidden="true">·</span>
+                <span t-if="occ_public_security_filing_text"
+                      class="o_occ_public_security_filing">
+                    <a t-if="website.occ_public_security_filing_url"
+                       t-att-href="website.occ_public_security_filing_url"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       t-out="occ_public_security_filing_text"/>
+                    <span t-else="" t-out="occ_public_security_filing_text"/>
+                </span>
+            </div>
+        </div>
+    </template>
+
+    <template id="layout_website_filing"
+              name="OdooCC Website Filing Layout"
+              inherit_id="website.layout"
+              priority="80">
+        <!-- This stays inside footer#bottom. Odoo's no_footer/footer_visible
+             behavior therefore hides the filing strip together with the full
+             footer, while footer_no_copyright does not affect it. -->
+        <xpath expr="//footer[@id='bottom']/div[@id='footer']" position="after">
+            <t t-call="occ_website_cn.website_filing"/>
+        </xpath>
+    </template>
+</odoo>

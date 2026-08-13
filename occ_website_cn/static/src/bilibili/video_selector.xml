@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="html_editor.VideoSelector" t-inherit-mode="extension">
+        <xpath expr="//small[hasclass('text-muted')]" position="inside">
+            <span>, plus <b><i>Bilibili (B站)</i></b> videos</span>
+        </xpath>
+    </t>
+</templates>

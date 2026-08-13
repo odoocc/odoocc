@@ -15,6 +15,11 @@ downloads/
 eggs/
 .eggs/
 lib/
+!occ_website_cn/static/lib/
+!occ_website_cn/static/lib/qrcode-generator/
+!occ_website_cn/static/lib/qrcode-generator/LICENSE
+!occ_website_cn/static/lib/qrcode-generator/NOTICE
+!occ_website_cn/static/lib/qrcode-generator/qrcode.js
 lib64/
 parts/
 sdist/

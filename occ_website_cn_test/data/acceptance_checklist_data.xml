@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="check_installation" model="occ.website.cn.acceptance.check">
+        <field name="sequence">10</field>
+        <field name="name">确认正式模块与验收模块可独立安装</field>
+        <field name="category">installation</field>
+        <field name="steps">在全新、无演示数据的 Odoo 19 测试数据库安装 occ_website_cn_test；确认它只通过依赖安装 occ_website_cn，且无需 occ_odoocc_demo 或其他 OdooCC 模块。</field>
+        <field name="expected_result">两个模块均安装完成，没有缺失依赖、XML、ACL 或资源加载错误；正式模块没有反向依赖验收模块。</field>
+    </record>
+
+    <record id="check_bilibili_builder" model="occ.website.cn.acceptance.check">
+        <field name="sequence">20</field>
+        <field name="name">在网站编辑器插入并重载B站视频</field>
+        <field name="category">bilibili</field>
+        <field name="steps">在隔离网站的媒体选择器粘贴一个经授权使用的公开 BV 地址和一个带合法分P参数的地址；分别完成插入、替换、保存和刷新。</field>
+        <field name="expected_result">编辑器识别B站视频，保存后统一使用 player.bilibili.com、合法视频标识、page 和 autoplay=0；刷新后仍可预览和再次编辑。</field>
+    </record>
+
+    <record id="check_bilibili_rich_text" model="occ.website.cn.acceptance.check">
+        <field name="sequence">30</field>
+        <field name="name">验证 HTML 富文本中的B站视频</field>
+        <field name="category">bilibili</field>
+        <field name="steps">在具有 HTML 富文本编辑器的非商品业务记录中粘贴标准B站地址与官方 iframe，保存并重新打开；不要使用商品媒体入口。</field>
+        <field name="expected_result">两种输入都转换为同一安全播放器契约，后台预览可用；未扩展的商品媒体不被误标为已支持。</field>
+    </record>
+
+    <record id="check_bilibili_rejection" model="occ.website.cn.acceptance.check">
+        <field name="sequence">40</field>
+        <field name="name">拒绝不受支持或不安全的B站输入</field>
+        <field name="category">bilibili</field>
+        <field name="steps">依次尝试 b23.tv、直播、番剧、课程、cid-only、伪造域名、javascript 地址、自动播放参数和带脚本属性的 iframe。</field>
+        <field name="expected_result">所有输入均被明确拒绝，不回退给其他视频平台解析器，不执行脚本、不跟随短链，也不向外部平台请求元数据。</field>
+    </record>
+
+    <record id="check_bilibili_cookie" model="occ.website.cn.acceptance.check">
+        <field name="sequence">50</field>
+        <field name="name">验证B站视频的可选 Cookie 边界</field>
+        <field name="category">security</field>
+        <field name="steps">启用 Odoo Cookie 条和第三方域名阻断，使用全新无痕浏览器打开含B站视频的发布页；先观察未同意状态的 Network，再接受可选 Cookie 并重试。</field>
+        <field name="expected_result">同意前页面不连接 bilibili.com 且仅显示占位；同意后播放器才加载。后台编辑预览不被发布页 Cookie 状态阻断。</field>
+    </record>
+
+    <record id="check_native_video_regression" model="occ.website.cn.acceptance.check">
+        <field name="sequence">60</field>
+        <field name="name">回归 Odoo 原生海外视频平台</field>
+        <field name="category">bilibili</field>
+        <field name="steps">在相同媒体入口插入一个 Odoo 原生支持且允许测试的海外视频地址，保存、刷新并替换；按原生方式设置其受支持选项。</field>
+        <field name="expected_result">原生平台继续使用 Odoo 自身解析和选项逻辑，B站增强没有改变其结果或错误提示。</field>
+    </record>
+
+    <record id="check_share_platforms" model="occ.website.cn.acceptance.check">
+        <field name="sequence">70</field>
+        <field name="name">验证五个国内分享入口</field>
+        <field name="category">sharing</field>
+        <field name="steps">在测试页加入国内分享区块，使用包含中文路径、查询参数和 fragment 的地址，依次点击微信、QQ好友、QQ空间、微博和复制链接；只使用脱敏参数。</field>
+        <field name="expected_result">五个入口均可操作；平台弹窗收到正确编码的标题和去除 fragment、保留查询参数的当前 URL；原生国际分享区块仍可独立使用。</field>
+    </record>
+
+    <record id="check_wechat_share_modes" model="occ.website.cn.acceptance.check">
+        <field name="sequence">80</field>
+        <field name="name">验证微信分享的三类浏览环境</field>
+        <field name="category">sharing</field>
+        <field name="steps">分别在桌面浏览器、微信内置浏览器和普通手机浏览器打开同一脱敏测试页并点击微信分享；不配置微信 JS-SDK。</field>
+        <field name="expected_result">桌面端在本地生成二维码；微信内提示右上角分享；普通手机浏览器复制链接并提示切换微信，页面不会误报 JS-SDK 分享成功。</field>
+    </record>
+
+    <record id="check_share_sensitive_url" model="occ.website.cn.acceptance.check">
+        <field name="sequence">90</field>
+        <field name="name">提示疑似敏感的分享链接</field>
+        <field name="category">security</field>
+        <field name="steps">只在隔离数据库构造带虚假 token、secret、password、session、auth、signature、code 或 key 参数的页面地址并触发分享；不要使用真实凭据。</field>
+        <field name="expected_result">分享前出现清晰警告，系统不擅自删改查询参数；取消不会打开平台窗口或写入剪贴板，继续后仍分享原始脱敏测试地址。</field>
+    </record>
+
+    <record id="check_share_fallback_accessibility" model="occ.website.cn.acceptance.check">
+        <field name="sequence">100</field>
+        <field name="name">验证复制失败回退与键盘操作</field>
+        <field name="category">sharing</field>
+        <field name="steps">在浏览器开发工具中拒绝 Clipboard 权限，验证复制回退；随后只使用键盘遍历分享按钮、警告和二维码对话框，并关闭弹窗。</field>
+        <field name="expected_result">复制失败时提供可操作的手工复制方式；按钮有可理解名称，焦点顺序正确，关闭弹窗后焦点返回触发按钮，Escape 和标准关闭操作可用。</field>
+    </record>
+
+    <record id="check_filing_multiwebsite" model="occ.website.cn.acceptance.check">
+        <field name="sequence">110</field>
+        <field name="name">按网站配置 ICP 与公安备案</field>
+        <field name="category">filing</field>
+        <field name="steps">创建两个隔离测试网站；在设置页切换当前网站，分别填写不同的脱敏 ICP/公安备案文本，并验证默认官网链接、一个自定义 HTTPS 链接和一个空链接。</field>
+        <field name="expected_result">配置只写入当前网站；两个默认链接分别指向工信部和公安备案官网；自定义链接正常保存，空链接渲染为纯文本。</field>
+    </record>
+
+    <record id="check_filing_url_validation" model="occ.website.cn.acceptance.check">
+        <field name="sequence">120</field>
+        <field name="name">验证备案链接协议与安全校验</field>
+        <field name="category">security</field>
+        <field name="steps">尝试保存相对地址、javascript/data/ftp 地址、含 userinfo、反斜杠、控制字符、空白主机或畸形端口的地址；再保存带 path、query、fragment 的完整 HTTP(S) 脱敏地址。</field>
+        <field name="expected_result">不安全或歧义地址被服务端拒绝并回滚；空值与完整 HTTP(S) 地址保存成功，合法的 path、query 和 fragment 被保留。</field>
+    </record>
+
+    <record id="check_filing_footer" model="occ.website.cn.acceptance.check">
+        <field name="sequence">130</field>
+        <field name="name">验证备案页脚的组合与显隐</field>
+        <field name="category">filing</field>
+        <field name="steps">依次测试仅 ICP、仅公安、两项齐全、两项展示文本全空；切换至少两个 footer 模板，分别隐藏 Copyright 和隐藏整个 footer。</field>
+        <field name="expected_result">展示文本为空的单项不出现，两项全空时备案条不存在；备案条跨 footer 模板稳定存在，隐藏 Copyright 不影响备案，隐藏整个 footer 时备案同步隐藏。</field>
+    </record>
+
+    <record id="check_no_sensitive_data" model="occ.website.cn.acceptance.check">
+        <field name="sequence">140</field>
+        <field name="name">复核验收数据与外部请求脱敏</field>
+        <field name="category">security</field>
+        <field name="steps">检查验收清单、浏览器存储、服务端日志、提交文件和 Network；只记录脱敏结论，不上传生产截图或复制完整客户 URL。</field>
+        <field name="expected_result">仓库和验收模型没有密码、Token、客户数据或带敏感查询参数的完整链接；二维码由浏览器本地生成，自动测试没有真实外部调用。</field>
+    </record>
+</odoo>
