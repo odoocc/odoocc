@@ -15,6 +15,12 @@ downloads/
 eggs/
 .eggs/
 lib/
+# Vditor 是 occ_markdown 的运行时依赖，不能被通用 lib/ 规则排除。
+!occ_markdown/
+!occ_markdown/static/
+!occ_markdown/static/lib/
+!occ_markdown/static/lib/vditor/
+!occ_markdown/static/lib/vditor/**
 !occ_website_cn/static/lib/
 !occ_website_cn/static/lib/qrcode-generator/
 !occ_website_cn/static/lib/qrcode-generator/LICENSE
