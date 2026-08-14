@@ -452,13 +452,15 @@ def _check_manifest(module: ModuleInfo, root: Path) -> list[str]:
                 )
             source = _read_text(test_path)
             valid_tag_call = any(
-                {"headless", module.name} <= tags
+                module.name in tags
+                and len({"headless", "desktop"} & tags) == 1
                 for tags in _javascript_describe_tag_calls(source)
             )
             if not valid_tag_call:
                 errors.append(
                     f"{_relative(test_path, root)}: Hoot 测试必须在同一个 "
-                    f"describe.current.tags 调用中包含 'headless' 和 {module.name!r}"
+                    "describe.current.tags 调用中包含 'headless' 或 'desktop'，"
+                    f"以及 {module.name!r}"
                 )
     elif unit_test_assets:
         errors.append(

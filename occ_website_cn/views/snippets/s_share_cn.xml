@@ -44,9 +44,17 @@
     </div>
 </template>
 
+<template id="s_share_cn_block" name="国内分享区块">
+    <section class="s_share_cn_block py-4">
+        <div class="container">
+            <t t-call="occ_website_cn.s_share_cn"/>
+        </div>
+    </section>
+</template>
+
 <template id="snippets" inherit_id="website.snippets" name="国内分享区块">
     <xpath expr="//snippets[@id='snippet_structure']" position="inside">
-        <t t-snippet="occ_website_cn.s_share_cn" string="国内分享" group="social"
+        <t t-snippet="occ_website_cn.s_share_cn_block" string="国内分享" group="social"
             t-thumbnail="/occ_website_cn/static/src/img/snippets_thumbs/s_share_cn.svg">
             <keywords>微信, QQ, QQ空间, 微博, 分享, 复制链接, China, share</keywords>
         </t>

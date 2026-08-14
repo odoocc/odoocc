@@ -21,6 +21,7 @@ class TestWebsiteFiling(TransactionCase):
     def _render_filing(self, website):
         with MockRequest(
             self.env,
+            context={"lang": website.default_lang_id.code},
             website=website,
             url_root="https://example.test/",
         ) as request:
@@ -35,6 +36,7 @@ class TestWebsiteFiling(TransactionCase):
     def _render_layout(self, website, **values):
         with MockRequest(
             self.env,
+            context={"lang": website.default_lang_id.code},
             website=website,
             url_root="https://example.test/",
         ) as request:
@@ -342,6 +344,7 @@ class TestWebsiteFiling(TransactionCase):
 
         with MockRequest(
             self.env,
+            context={"lang": website.default_lang_id.code},
             website=website,
             url_root="https://example.test/",
         ) as request:

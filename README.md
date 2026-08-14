@@ -17,8 +17,12 @@ OdooCC 是一组面向 **Odoo 19.0** 的开源扩展，当前聚焦层级列表�
 | `occ_treegrid_test` | `19.0.1.0.1` | 演示/验收模块 | `occ_treegrid` | 提供示例模型、样例数据、菜单和回归测试，仅用于非生产环境 |
 | `occ_wechat_login` | `19.0.4.0.5` | 正式模块 | `web`、`mail`、`base_setup` | 提供微信 QRConnect 扫码登录、UnionID 账号绑定、社区用户名与邮箱验证 |
 | `occ_wechat_login_test` | `19.0.1.0.1` | 验收辅助模块 | `occ_wechat_login` | 提供管理员人工验收清单，不模拟认证、不保存微信身份或凭据，仅用于非生产环境 |
-| `occ_website_cn` | `19.0.1.0.0` | 正式模块 | `website` | 增加B站视频、国内分享和多网站 ICP/公安备案，可用于经过验收的生产网站 |
-| `occ_website_cn_test` | `19.0.1.0.0` | 验收辅助模块 | `occ_website_cn` | 提供三项网站增强能力的管理员脱敏验收清单，仅用于非生产环境 |
+| `occ_website_cn` | `19.0.1.0.1` | 正式模块 | `website`、`occ_base_bilibili` | 增加B站视频、国内分享和多网站 ICP/公安备案，可用于经过验收的生产网站 |
+| `occ_website_cn_test` | `19.0.1.0.1` | 验收辅助模块 | `occ_website_cn` | 提供三项网站增强能力的管理员脱敏验收清单，仅用于非生产环境 |
+| `occ_base_bilibili` | `19.0.1.0.0` | 正式基础模块 | `web` | 提供不访问外网的严格B站视频解析接口，可供生产模块复用 |
+| `occ_base_bilibili_test` | `19.0.1.0.0` | 演示/验收模块 | `occ_base_bilibili` | 提供不加载视频的交互式离线解析器，仅用于非生产环境 |
+| `occ_markdown` | `19.0.1.0.0` | 正式基础模块 | `html_editor`、`occ_base_bilibili` | 提供服务端转换、单窗口所见即所得字段和 HTML `/Markdown` 命令 |
+| `occ_markdown_test` | `19.0.1.0.0` | 演示/验收模块 | `occ_markdown` | 提供 Markdown 综合写作、图片、B站和 Powerbox 验收工作台 |
 
 详细功能、配置契约与安全边界请阅读：
 
@@ -28,6 +32,10 @@ OdooCC 是一组面向 **Odoo 19.0** 的开源扩展，当前聚焦层级列表�
 - [`occ_wechat_login_test/README.md`](occ_wechat_login_test/README.md)
 - [`occ_website_cn/README.md`](occ_website_cn/README.md)
 - [`occ_website_cn_test/README.md`](occ_website_cn_test/README.md)
+- [`occ_base_bilibili/README.md`](occ_base_bilibili/README.md)
+- [`occ_base_bilibili_test/README.md`](occ_base_bilibili_test/README.md)
+- [`occ_markdown/README.md`](occ_markdown/README.md)
+- [`occ_markdown_test/README.md`](occ_markdown_test/README.md)
 
 ## 兼容性
 
@@ -46,9 +54,11 @@ OdooCC 是一组面向 **Odoo 19.0** 的开源扩展，当前聚焦层级列表�
 ```bash
 git clone https://github.com/odoocc/odoocc.git addons_odoocc
 
+python -m pip install -r addons_odoocc/requirements.txt
+
 ./odoo-bin -d <数据库名> \
     --addons-path=addons,addons_odoocc \
-    -i occ_treegrid,occ_wechat_login,occ_website_cn \
+    -i occ_treegrid,occ_wechat_login,occ_base_bilibili,occ_markdown,occ_website_cn \
     --stop-after-init
 ```
 
@@ -62,7 +72,7 @@ git clone https://github.com/odoocc/odoocc.git addons_odoocc
 ```bash
 ./odoo-bin -d <非生产数据库> \
     --addons-path=addons,addons_odoocc \
-    -i occ_treegrid_test,occ_wechat_login_test,occ_website_cn_test \
+    -i occ_treegrid_test,occ_wechat_login_test,occ_base_bilibili_test,occ_markdown_test,occ_website_cn_test \
     --stop-after-init
 ```
 
@@ -78,7 +88,7 @@ git pull --ff-only
 
 ./odoo-bin -d <数据库名> \
     --addons-path=addons,addons_odoocc \
-    -u occ_treegrid,occ_wechat_login,occ_website_cn \
+    -u occ_treegrid,occ_wechat_login,occ_base_bilibili,occ_markdown,occ_website_cn \
     --stop-after-init
 ```
 
@@ -123,6 +133,9 @@ TreeGrid Hoot 前端测试：
 
 Hoot 命令需要系统中存在可用的 Google Chrome 或 Chromium。完整依赖、PostgreSQL 参数和
 自动化步骤见 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)。
+
+Markdown 与B站基础组件也分别使用 `occ_markdown`、`occ_base_bilibili` Hoot 标签；将上述
+命令中的模块名和标签替换后即可定向运行。
 
 ## 开发规范与新模块
 
@@ -235,6 +248,9 @@ configured hierarchical list view with ancestor-aware results and safe sibling
 resequencing. `occ_wechat_login` implements WeChat QRConnect login, UnionID account
 binding, community usernames, and email verification. `occ_website_cn` adds Bilibili
 media, China-focused sharing, and per-website ICP/public-security filing information.
+`occ_base_bilibili` exposes strict offline Python and JavaScript Bilibili parsers.
+`occ_markdown` adds a sanitized conversion API, a single-window editor, image and Bilibili
+insertion, and a global HTML-editor Markdown command.
 
 The companion `*_test` modules are for development, demonstrations, and acceptance
 testing only; do not install them in a production database. See the module READMEs for

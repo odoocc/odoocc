@@ -242,10 +242,16 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 - JavaScript 模块采用 Odoo 19 模块与 OWL/Hoot 约定，避免全局补丁；必须补丁时说明影响面
   和卸载/升级行为。
 - 前端错误、空状态、键盘操作和辅助功能按实际交互风险测试。
-- 每个 Hoot 测试文件添加：
+- 每个 Hoot 测试文件必须在同一次调用中添加模块标签及一种运行环境标签。普通逻辑测试使用
+  `headless`；依赖 Website/HTML Builder 等桌面 UI helper 的测试使用 `desktop`，二者不得
+  同时使用：
 
   ```javascript
   describe.current.tags("headless", "occ_quality_trace");
+  ```
+
+  ```javascript
+  describe.current.tags("desktop", "occ_quality_trace");
   ```
 
 模块技术名标签用于 CI 自动发现后定向执行。

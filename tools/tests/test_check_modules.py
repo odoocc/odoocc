@@ -160,12 +160,29 @@ class TestCheckModules(unittest.TestCase):
                 "`;\n",
                 False,
             ),
-            "real_call": (
+            "headless_call": (
                 "describe.current.tags(\n"
                 '    "headless",\n'
                 '    "occ_service_desk",\n'
                 ");\n",
                 True,
+            ),
+            "desktop_call": (
+                'describe.current.tags("desktop", "occ_service_desk");\n',
+                True,
+            ),
+            "module_only": (
+                'describe.current.tags("occ_service_desk");\n',
+                False,
+            ),
+            "split_calls": (
+                'describe.current.tags("desktop");\n'
+                'describe.current.tags("occ_service_desk");\n',
+                False,
+            ),
+            "mutually_exclusive_execution_tags": (
+                'describe.current.tags("headless", "desktop", "occ_service_desk");\n',
+                False,
             ),
         }
         for label, (source, should_pass) in cases.items():

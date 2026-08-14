@@ -73,7 +73,9 @@
         }
 
         .modal-dialog {
-            margin: min(12vh, 6rem) auto;
+            // CSS functions are case-insensitive, while libsass functions are
+            // not. Capitalizing Min avoids libsass trying to compare vh/rem.
+            margin: Min(12vh, 6rem) auto;
             max-width: 26rem;
         }
     }

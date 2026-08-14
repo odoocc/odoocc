@@ -1,6 +1,6 @@
 {
     "name": "OdooCC 网站中国生态增强验收",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "category": "Tools",
     "summary": "验收 OdooCC 网站中国生态增强的公开业务契约",
     "description": "为 occ_website_cn 提供管理员可维护的脱敏人工验收清单，验证安装、配置、核心流程和权限边界。",

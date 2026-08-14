@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="markdown_demo_default" model="occ.markdown.demo">
+        <field name="name">Markdown 综合示例</field>
+        <field name="markdown_source"><![CDATA[# Markdown 综合示例 😀
+
+## 图片
+
+![OdooCC](https://odoocc.com/web/image/website/1/logo)
+
+## 表格
+
+| 能力 | 状态 |
+| --- | --- |
+| 所见即所得 | 可编辑 |
+| 服务端效果 | 同源转换 |
+
+## 代码
+
+```python
+env["occ.markdown.service"].convert_markdown("# 你好", {})
+```
+
+## B站视频
+
+{{bilibili:BV1xx411c7mD|page=2}}
+]]></field>
+        <field name="rich_text"><![CDATA[<p>在这里输入 <code>/Markdown</code> 验收富文本插入。</p>]]></field>
+    </record>
+    <record id="markdown_demo_business_flow" model="occ.markdown.demo">
+        <field name="name">端到端业务流程表格与流程图</field>
+        <field name="markdown_source"><![CDATA[# 端到端业务流程
+
+| 端到端流程 | 英文缩写 | 起点 | 终点 | 贯穿的核心模块 |
+| --- | --- | --- | --- | --- |
+| **线索到回款** | LTC（Lead to Cash） | 获取销售线索 | 收回客户款项 | CRM → 销售 → 库存 → 会计 |
+| **寻源到付款** | STP（Source to Pay） | 识别采购需求 | 支付供应商款项 | 采购 → 库存 → 会计 |
+| **计划到生产** | PTP（Plan to Produce） | 需求产生（订单/预测） | 成品完工入库 | 销售/预测 → 生产 → 库存 → 质量 |
+| **订单到收款** | OTC（Order to Cash） | 客户下订单 | 收回客户款项 | 销售 → 库存 → 会计 |
+| **采购到付款** | PTP（Procure to Pay） | 创建采购订单 | 支付供应商款项 | 采购 → 库存 → 会计 |
+
+**注**：OTC 是 LTC 的核心子集，PTP 是 STP 的核心子集，实质是业务流与资金流的双闭环。
+
+## 线索到回款流程图
+
+```mermaid
+flowchart TD
+    A[CRM线索管理] --> B[生成报价单]
+    B --> C{报价审核}
+    C -- 未通过 --> B
+    C -- 通过 --> D[确认销售订单]
+    D --> E{检查库存}
+    E -- 库存充足 --> F[预留库存]
+    E -- 库存不足 --> G[触发补货/采购流程]
+    F --> H[发货配送]
+    G --> H
+    H --> I[生成发票]
+    I --> J[收款与对账]
+    J --> K[订单闭环完成]
+```
+]]></field>
+        <field name="rich_text"><![CDATA[<p>验收业务流程表格、Mermaid 流程图和 <code>/Markdown</code> 插入。</p>]]></field>
+    </record>
+</odoo>

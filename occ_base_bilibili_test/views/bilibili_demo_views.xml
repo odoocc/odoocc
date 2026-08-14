@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bilibili_demo_list" model="ir.ui.view">
+        <field name="name">occ.base.bilibili.demo.list</field>
+        <field name="model">occ.base.bilibili.demo</field>
+        <field name="arch" type="xml">
+            <list string="B站视频解析验收">
+                <field name="name"/>
+                <field name="video_input"/>
+                <field name="parse_status" widget="badge"
+                       decoration-success="parse_status == 'valid'"
+                       decoration-danger="parse_status == 'invalid'"/>
+                <field name="canonical_video_id"/>
+                <field name="page"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bilibili_demo_form" model="ir.ui.view">
+        <field name="name">occ.base.bilibili.demo.form</field>
+        <field name="model">occ.base.bilibili.demo</field>
+        <field name="arch" type="xml">
+            <form string="B站视频解析验收">
+                <header>
+                    <button name="action_parse" type="object" string="离线解析"
+                            class="oe_highlight"/>
+                    <field name="parse_status" widget="statusbar"
+                           statusbar_visible="pending,valid,invalid"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        本页面只做离线白名单解析，不访问B站、不加载真实视频，也不跟随短链接。
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <field name="video_input" placeholder="粘贴B站视频地址、官方播放器地址或av号"/>
+                        <field name="allow_bare_bvid"/>
+                    </group>
+                    <group string="解析结果">
+                        <group>
+                            <field name="is_bilibili_input"/>
+                            <field name="canonical_video_id"/>
+                            <field name="page"/>
+                        </group>
+                        <group>
+                            <field name="player_url" widget="url"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bilibili_demo" model="ir.actions.act_window">
+        <field name="name">B站视频解析器</field>
+        <field name="res_model">occ.base.bilibili.demo</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_bilibili_demo"
+              name="B站视频解析器"
+              parent="menu_acceptance_root"
+              action="action_bilibili_demo"
+              sequence="5"
+              groups="base.group_system"/>
+</odoo>

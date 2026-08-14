@@ -1,6 +1,6 @@
 {
     "name": "OdooCC 网站中国生态增强",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "category": "Website/Website",
     "summary": "为 Odoo 网站增加 B站视频、国内分享和网站备案能力",
     "description": "面向中国大陆网站生态，以增量方式增强 Odoo Website，不替换原生国际平台能力。",
@@ -8,7 +8,7 @@
     "website": "https://odoocc.com",
     "support": "156277468@qq.com",
     "license": "AGPL-3",
-    "depends": ["website"],
+    "depends": ["website", "occ_base_bilibili"],
     "data": [
         "views/res_config_settings_views.xml",
         "views/website_filing_templates.xml",
@@ -34,11 +34,13 @@
             "occ_website_cn/static/src/share/share_cn.scss",
         ],
         "html_editor.assets_media_dialog": [
+            "occ_base_bilibili/static/src/bilibili_parser.js",
             "occ_website_cn/static/src/bilibili/bilibili_parser.js",
             "occ_website_cn/static/src/bilibili/video_selector_patch.js",
             "occ_website_cn/static/src/bilibili/video_selector.xml",
         ],
         "website.website_builder_assets": [
+            "occ_base_bilibili/static/src/bilibili_parser.js",
             "occ_website_cn/static/src/bilibili/bilibili_parser.js",
             "occ_website_cn/static/src/bilibili/bilibili_paste_plugin.js",
             "occ_website_cn/static/src/bilibili/video_selector_patch.js",
@@ -51,6 +53,7 @@
         ],
         "web.assets_unit_tests_setup": [
             "occ_website_cn/static/lib/qrcode-generator/qrcode.js",
+            "occ_base_bilibili/static/src/bilibili_parser.js",
             "occ_website_cn/static/src/bilibili/bilibili_parser.js",
             "occ_website_cn/static/src/bilibili/generate_video_iframe.js",
             "occ_website_cn/static/src/bilibili/bilibili_paste_plugin.js",
@@ -63,11 +66,13 @@
             "occ_website_cn/static/src/bilibili/public_embedded_video_patch.js",
             "occ_website_cn/static/src/share/share_utils.js",
             "occ_website_cn/static/src/share/share_cn.js",
+            "occ_website_cn/static/src/share/share_cn_builder_plugin.js",
         ],
         "web.assets_unit_tests": [
             "occ_website_cn/static/tests/bilibili_editor.test.js",
             "occ_website_cn/static/tests/bilibili_iframe.test.js",
             "occ_website_cn/static/tests/bilibili_parser.test.js",
+            "occ_website_cn/static/tests/share_cn_builder.test.js",
             "occ_website_cn/static/tests/share_cn_interaction.test.js",
             "occ_website_cn/static/tests/share_cn_utils.test.js",
         ],

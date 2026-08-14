@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_occ_markdown_acceptance_check_system,occ.markdown.acceptance.check.system,model_occ_markdown_acceptance_check,base.group_system,1,1,1,1
+access_occ_markdown_demo_system,occ.markdown.demo.system,model_occ_markdown_demo,base.group_system,1,1,1,1

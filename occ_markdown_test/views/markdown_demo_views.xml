@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_markdown_demo_list" model="ir.ui.view">
+        <field name="name">occ.markdown.demo.list</field>
+        <field name="model">occ.markdown.demo</field>
+        <field name="arch" type="xml">
+            <list string="Markdown 编辑器验收">
+                <field name="name"/>
+                <field name="markdown_strip_emoji"/>
+                <field name="markdown_create_toc"/>
+                <field name="generated_at"/>
+                <field name="generated_by"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_markdown_demo_form" model="ir.ui.view">
+        <field name="name">occ.markdown.demo.form</field>
+        <field name="model">occ.markdown.demo</field>
+        <field name="arch" type="xml">
+            <form string="Markdown 编辑器验收">
+                <header>
+                    <button name="action_generate_html" type="object"
+                            string="生成服务端 HTML" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        默认只显示单个所见即所得编辑窗口；可切换到 Markdown 源码或只读服务端效果。
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <field name="markdown_strip_emoji"/>
+                        <field name="markdown_create_toc"/>
+                        <field name="generated_at"/>
+                        <field name="generated_by"/>
+                    </group>
+                    <notebook>
+                        <page name="markdown" string="Markdown 写作">
+                            <field name="markdown_source" widget="occ_markdown" nolabel="1"
+                                   options="{'strip_emoji_field': 'markdown_strip_emoji', 'create_toc_field': 'markdown_create_toc', 'enable_images': True, 'enable_bilibili': True}"/>
+                        </page>
+                        <page name="generated" string="已生成 HTML">
+                            <field name="generated_html" widget="html" nolabel="1" readonly="1"/>
+                        </page>
+                        <page name="powerbox" string="HTML /Markdown 验收">
+                            <div class="alert alert-warning" role="alert">
+                                在下方富文本字段输入 /Markdown，选择命令后会打开同一个单窗口编辑器。
+                            </div>
+                            <field name="rich_text" widget="html" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_markdown_demo" model="ir.actions.act_window">
+        <field name="name">Markdown 编辑工作台</field>
+        <field name="res_model">occ.markdown.demo</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_markdown_demo"
+              name="Markdown 编辑工作台"
+              parent="menu_acceptance_root"
+              action="action_markdown_demo"
+              sequence="5"
+              groups="base.group_system"/>
+</odoo>

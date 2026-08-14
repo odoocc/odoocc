@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="occ_markdown.MarkdownEditor">
+        <div class="o_occ_markdown_editor">
+            <div class="o_occ_markdown_modebar d-flex flex-wrap align-items-center gap-2 p-2">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Markdown 编辑模式">
+                    <button type="button" class="btn o_occ_markdown_mode_wysiwyg"
+                            t-att-class="state.mode === 'wysiwyg' ? 'btn-primary' : 'btn-outline-secondary'"
+                            t-on-click="() => this.setMode('wysiwyg')">所见即所得</button>
+                    <button type="button" class="btn o_occ_markdown_mode_source"
+                            t-att-class="state.mode === 'source' ? 'btn-primary' : 'btn-outline-secondary'"
+                            t-on-click="() => this.setMode('source')">Markdown 源码</button>
+                    <button type="button" class="btn o_occ_markdown_mode_server"
+                            t-att-class="state.mode === 'server' ? 'btn-primary' : 'btn-outline-secondary'"
+                            t-on-click="() => this.setMode('server')">服务端效果</button>
+                </div>
+                <div class="ms-auto d-flex flex-wrap align-items-center gap-2">
+                    <label t-if="props.showStripEmoji" class="form-check mb-0">
+                        <input class="form-check-input" type="checkbox"
+                               t-att-checked="props.stripEmoji"
+                               t-on-change="(ev) => this.onOptionChange('stripEmoji', ev)"/>
+                        <span class="form-check-label">清除表情符号</span>
+                    </label>
+                    <label t-if="props.showCreateToc" class="form-check mb-0">
+                        <input class="form-check-input" type="checkbox"
+                               t-att-checked="props.createToc"
+                               t-on-change="(ev) => this.onOptionChange('createToc', ev)"/>
+                        <span class="form-check-label">生成目录</span>
+                    </label>
+                    <span t-if="state.uploadingImage" class="text-muted small">
+                        <i class="fa fa-spinner fa-spin me-1"/>正在上传图片
+                    </span>
+                    <button t-if="props.enableBilibili and !props.readonly" type="button"
+                            class="btn btn-outline-danger btn-sm"
+                            t-on-click="insertBilibiliVideo" title="插入B站视频">
+                        <i class="fa fa-play-circle me-1"/>B站视频
+                    </button>
+                    <button t-if="props.enableImages and !props.readonly" type="button"
+                            class="btn btn-outline-primary btn-sm o_occ_markdown_image_button"
+                            t-on-click="openMediaDialog"
+                            t-att-title="canUpload ? '插入图片' : '请先保存记录'"
+                            t-att-disabled="!canUpload">
+                        <i class="fa fa-image me-1"/>图片
+                    </button>
+                </div>
+            </div>
+            <div t-ref="editorHost" t-att-class="state.mode === 'server' ? 'd-none' : ''"/>
+            <div t-if="state.mode === 'server'" class="o_occ_markdown_server_preview">
+                <div t-if="state.previewLoading" class="text-muted text-center py-5">
+                    <i class="fa fa-spinner fa-spin me-1"/>正在生成服务端效果
+                </div>
+                <div t-elif="state.previewError" class="alert alert-danger m-3">
+                    服务端效果生成失败，请检查 Markdown 内容。
+                </div>
+                <t t-elif="state.serverHtml" t-out="serverMarkup"/>
+                <div t-else="" class="text-muted text-center py-5">暂无 Markdown 内容。</div>
+            </div>
+            <div t-if="!props.resId and props.enableImages" class="form-text px-2 pb-2">
+                保存记录后即可粘贴本地图片或使用媒体库；网络图片仍可直接粘贴。
+            </div>
+        </div>
+    </t>
+
+    <t t-name="occ_markdown.BilibiliPreviewDialog">
+        <Dialog title.translate="B站视频预览" size="'xl'">
+            <div class="alert alert-info py-2" role="status">
+                正在预览：<t t-esc="props.videoLabel"/>。播放器由B站提供，播放时会连接B站。
+            </div>
+            <div class="ratio ratio-16x9 bg-dark rounded overflow-hidden">
+                <iframe class="w-100 h-100 border-0"
+                        t-att-src="props.playerUrl"
+                        t-att-data-player-url="props.playerUrl"
+                        title="B站视频预览"
+                        loading="eager"
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowfullscreen="allowfullscreen"
+                        referrerpolicy="strict-origin-when-cross-origin"/>
+            </div>
+            <t t-set-slot="footer">
+                <button type="button" class="btn btn-secondary" t-on-click="props.close">关闭</button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="occ_markdown.MarkdownField">
+        <OccMarkdownEditor value="value" onChange.bind="onChange"
+                           readonly="props.readonly"
+                           resModel="props.record.resModel" resId="props.record.resId"
+                           stripEmoji="stripEmoji" createToc="createToc"
+                           showStripEmoji="showStripEmoji"
+                           showCreateToc="showCreateToc"
+                           onOptionChange.bind="onOptionChange"
+                           enableImages="props.enableImages"
+                           enableBilibili="props.enableBilibili"
+                           minHeight="props.minHeight"/>
+    </t>
+
+    <t t-name="occ_markdown.MarkdownDialog">
+        <Dialog title.translate="插入 Markdown" size="'xl'">
+            <OccMarkdownEditor value="state.value" onChange.bind="onChange"
+                               resModel="props.resModel" resId="props.resId"
+                               stripEmoji="state.stripEmoji" createToc="state.createToc"
+                               showStripEmoji="true" showCreateToc="true"
+                               onOptionChange.bind="onOptionChange"
+                               enableImages="true" enableBilibili="true" minHeight="480"/>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="confirm"
+                        t-att-disabled="state.saving">
+                    <i t-if="state.saving" class="fa fa-spinner fa-spin me-1"/>转换并插入
+                </button>
+                <button class="btn btn-secondary" t-on-click="props.close">取消</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
