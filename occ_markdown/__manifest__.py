@@ -24,6 +24,7 @@
             "occ_markdown/static/src/js/markdown_plugin.js",
             "occ_markdown/static/src/js/html_field_patch.js",
             "occ_markdown/static/src/js/mermaid_renderer.js",
+            "occ_markdown/static/src/js/media_zoom.js",
             "occ_markdown/static/src/xml/markdown_editor.xml",
             "occ_markdown/static/src/scss/markdown_editor.scss",
         ],
@@ -33,6 +34,7 @@
         ],
         "web.assets_frontend": [
             "occ_markdown/static/src/js/mermaid_renderer.js",
+            "occ_markdown/static/src/js/media_zoom.js",
             "occ_markdown/static/src/scss/markdown_editor.scss",
         ],
     },

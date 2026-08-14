@@ -219,7 +219,7 @@ class OccMarkdownService(models.AbstractModel):
         for pre in document.iter("pre"):
             pre.set("class", "bg-light border rounded p-3 overflow-auto")
         for image in document.iter("img"):
-            image.set("class", "img-fluid")
+            image.set("class", "img-fluid o_occ_markdown_zoomable")
             image.set("loading", "lazy")
         for link in document.iter("a"):
             link.set("rel", "noopener noreferrer")

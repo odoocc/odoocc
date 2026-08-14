@@ -84,11 +84,74 @@
 
 .o_occ_markdown_mermaid_diagram {
     width: 100%;
+    cursor: zoom-in;
 
     svg {
         display: block;
         max-width: 100%;
         height: auto;
         margin-inline: auto;
+    }
+}
+
+img.o_occ_markdown_zoomable {
+    cursor: zoom-in;
+}
+
+.o_occ_markdown_zoom_overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.75);
+    cursor: zoom-out;
+}
+
+.o_occ_markdown_zoom_content {
+    max-width: 95vw;
+    max-height: 92vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    background: var(--o-view-background-color, #fff);
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.35);
+    transform-origin: center center;
+    transition: transform 0.12s ease-out;
+}
+
+.o_occ_markdown_zoom_toolbar {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 0.4rem;
+    background: rgba(0, 0, 0, 0.75);
+    transform: translateX(-50%);
+
+    button {
+        min-width: 2.1rem;
+        padding: 0.25rem 0.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 0.25rem;
+        color: #fff;
+        background: transparent;
+        cursor: pointer;
+
+        &:hover,
+        &:focus-visible {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    }
+
+    .o_occ_markdown_zoom_value {
+        min-width: 3.5rem;
+        color: #fff;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
     }
 }

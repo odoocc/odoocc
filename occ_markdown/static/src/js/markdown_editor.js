@@ -25,6 +25,7 @@ export class OccMarkdownEditor extends Component {
     static props = {
         value: { type: String, optional: true },
         onChange: Function,
+        onReady: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
         resModel: { type: String, optional: true },
         resId: { type: [Number, Boolean], optional: true },
@@ -73,7 +74,10 @@ export class OccMarkdownEditor extends Component {
                 this.openBilibiliCard(event);
             }
         };
-        onMounted(() => this.mountVditor());
+        onMounted(() => {
+            this.mountVditor();
+            this.props.onReady?.(this);
+        });
         onWillUpdateProps((nextProps) => {
             if (nextProps.value !== this.props.value && nextProps.value !== this.currentValue) {
                 this.currentValue = nextProps.value || "";
@@ -101,6 +105,22 @@ export class OccMarkdownEditor extends Component {
 
     get canUpload() {
         return Boolean(this.props.resModel && this.props.resId && !this.props.readonly);
+    }
+
+    /**
+     * 将编辑器内部值同步回字段。发布、切换文档等外部动作可以调用它，
+     * 避免最后一次输入事件仍在 Vditor 内部时读取到旧值。
+     */
+    flushValue() {
+        if (this.props.readonly || !this.editor?.getValue) {
+            return this.currentValue;
+        }
+        const value = this.editor.getValue();
+        this.currentValue = value;
+        if (value !== this.props.value) {
+            this.props.onChange(value);
+        }
+        return value;
     }
 
     mountVditor() {
@@ -242,6 +262,9 @@ export class OccMarkdownEditor extends Component {
                     block.removeAttribute("title");
                 }
             }
+        });
+        this.host.el.querySelectorAll("img").forEach((image) => {
+            image.classList.add("o_occ_markdown_zoomable");
         });
     }
 
