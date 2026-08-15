@@ -199,6 +199,7 @@ class OccMarkdownService(models.AbstractModel):
         return (
             '<div class="media_iframe_video occ_bilibili_embedded_video '
             'o_occ_markdown_bilibili" data-oe-expression="%s">'
+            '<div class="media_iframe_video_size"></div>'
             '<iframe src="%s" title="B站视频" loading="lazy" frameborder="0" '
             'allowfullscreen="allowfullscreen" referrerpolicy="strict-origin-when-cross-origin">'
             "</iframe></div>"
